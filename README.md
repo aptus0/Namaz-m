@@ -31,6 +31,7 @@ Not: Servis erisim/limit kurallari operasyonel olarak proje disinda takip edilir
 - App state + local notification scheduler
 - Alarm/hatirlatma akislarinin merkezi yonetimi
 - Onboarding izin akisi (konum -> bildirim) + fallback il secimi
+- Minimum deployment target: `iOS 18.0`
 
 ## iOS Dosya Yapisi
 

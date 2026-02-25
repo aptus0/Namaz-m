@@ -2,6 +2,13 @@
 
 Bu dosya projedeki surum degisimlerini takip eder.
 
+## [0.1.7] - 2026-02-25
+
+### Changed
+
+- iOS deployment target tum build konfiglarinda `18.0` olarak sabitlendi.
+- Proje derlemesi iOS 18 hedefiyle dogrulandi (`arm64-apple-ios18.0-simulator`).
+
 ## [0.1.6] - 2026-02-25
 
 ### Added
