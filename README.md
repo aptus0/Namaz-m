@@ -38,3 +38,20 @@ Not: Servis erisim/limit kurallari operasyonel olarak proje disinda takip edilir
 3. Favoriler ve icerik detaylari
 4. Hakkinda/Gizlilik sayfalari
 
+## Versiyonlama Akisi
+
+Projede her degisiklikten sonra commit ve versiyon etiketi uretilmesi hedeflenir.
+
+Otomatik akis icin:
+
+```bash
+./scripts/release.sh patch "kisa commit mesaji"
+./scripts/release.sh minor "kisa commit mesaji"
+./scripts/release.sh major "kisa commit mesaji"
+```
+
+Bu komut:
+
+1. `VERSION` degerini artirir
+2. tum degisiklikleri commitleyip
+3. `vX.Y.Z` etiketi olusturur
