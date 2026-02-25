@@ -3,6 +3,7 @@ import UIKit
 
 struct DailyContentScreenView: View {
     @EnvironmentObject private var appState: AppState
+    @EnvironmentObject private var adManager: AdManager
 
     @State private var selectedTab: DailyContentTab = .today
     @State private var isCopyAlertPresented = false
@@ -80,6 +81,12 @@ struct DailyContentScreenView: View {
                             .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.bordered)
+
+                    if adManager.shouldShowBannerAds {
+                        BannerAdView(adUnitID: AdMobConfig.bannerUnitID)
+                            .frame(height: 60)
+                            .premiumCardStyle()
+                    }
                 }
                 .padding()
             }
@@ -94,6 +101,7 @@ struct DailyContentScreenView: View {
 
 private struct FavoritesView: View {
     @EnvironmentObject private var appState: AppState
+    @EnvironmentObject private var adManager: AdManager
     let allContents: [DailyContent]
 
     private var favorites: [DailyContent] {
@@ -125,5 +133,8 @@ private struct FavoritesView: View {
             }
         }
         .navigationTitle("Favoriler")
+        .onAppear {
+            adManager.showInterstitialIfEligible(for: .hadithCollection)
+        }
     }
 }

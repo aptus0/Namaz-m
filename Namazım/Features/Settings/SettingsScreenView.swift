@@ -4,6 +4,7 @@ struct SettingsScreenView: View {
     @EnvironmentObject private var appState: AppState
     @EnvironmentObject private var notificationManager: NotificationManager
     @EnvironmentObject private var locationManager: LocationManager
+    @EnvironmentObject private var adManager: AdManager
 
     @State private var isCityPickerPresented = false
 
@@ -75,6 +76,36 @@ struct SettingsScreenView: View {
                             ForEach(DataSourceOption.allCases) { option in
                                 Text(option.rawValue).tag(option)
                             }
+                        }
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .premiumCardStyle()
+
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text("Premium ve Reklam")
+                            .font(.headline)
+
+                        if adManager.isAdFreeActive, let adFreeUntil = adManager.adFreeUntil {
+                            Label(
+                                "Reklamsiz mod aktif: \(adFreeUntil.formatted(.dateTime.day().month().hour().minute()))",
+                                systemImage: "sparkles"
+                            )
+                            .foregroundStyle(.green)
+                            .font(.subheadline)
+                        } else {
+                            Text("Reklam izleyerek 24 saat reklamsiz deneyimi acabilirsiniz.")
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
+
+                            Button {
+                                adManager.showRewardedUnlock()
+                            } label: {
+                                Label("Reklamsiz 24 Saat Ac (Rewarded)", systemImage: "play.circle.fill")
+                                    .frame(maxWidth: .infinity)
+                            }
+                            .buttonStyle(.borderedProminent)
+                            .tint(PremiumPalette.navy)
+                            .disabled(!adManager.isSDKReady)
                         }
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)

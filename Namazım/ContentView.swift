@@ -48,4 +48,5 @@ struct ContentView: View {
         .environmentObject(AppState())
         .environmentObject(NotificationManager())
         .environmentObject(LocationManager())
+        .environmentObject(AdManager())
 }

@@ -13,6 +13,8 @@ struct Namaz_mApp: App {
     @StateObject private var appState = AppState()
     @StateObject private var notificationManager = NotificationManager()
     @StateObject private var locationManager = LocationManager()
+    @StateObject private var adManager = AdManager()
+    @State private var hasHandledFirstActivePhase = false
 
     var body: some Scene {
         WindowGroup {
@@ -20,9 +22,11 @@ struct Namaz_mApp: App {
                 .environmentObject(appState)
                 .environmentObject(notificationManager)
                 .environmentObject(locationManager)
+                .environmentObject(adManager)
                 .onAppear {
                     notificationManager.configureIfNeeded()
                     locationManager.configureIfNeeded()
+                    adManager.configureIfNeeded()
                 }
                 .task {
                     await notificationManager.refreshAuthorizationStatus()
@@ -31,6 +35,7 @@ struct Namaz_mApp: App {
                     if locationManager.isAuthorized {
                         locationManager.requestSingleLocation()
                     }
+                    adManager.loadAllFormats()
                 }
                 .onChange(of: appState.notificationFingerprint) { _, _ in
                     Task {
@@ -46,6 +51,7 @@ struct Namaz_mApp: App {
                     if locationManager.isAuthorized {
                         locationManager.requestSingleLocation()
                     }
+                    adManager.loadAllFormats()
                 }
                 .onChange(of: scenePhase) { _, newPhase in
                     guard newPhase == .active else { return }
@@ -56,6 +62,13 @@ struct Namaz_mApp: App {
                     locationManager.refreshAuthorizationStatus()
                     if locationManager.isAuthorized {
                         locationManager.requestSingleLocation()
+                    }
+                    if appState.hasCompletedOnboarding {
+                        if hasHandledFirstActivePhase {
+                            adManager.showAppOpenIfEligible()
+                        } else {
+                            hasHandledFirstActivePhase = true
+                        }
                     }
                 }
         }

@@ -9,6 +9,8 @@ enum CalendarTab: String, CaseIterable, Identifiable {
 }
 
 struct CalendarScreenView: View {
+    @EnvironmentObject private var adManager: AdManager
+
     @State private var selectedTab: CalendarTab = .monthly
     @State private var selectedDate = Date()
     @State private var now = Date()
@@ -41,6 +43,12 @@ struct CalendarScreenView: View {
                     } else {
                         RamadanPrayerList(referenceDate: selectedDate, now: now)
                     }
+
+                    if adManager.shouldShowBannerAds {
+                        BannerAdView(adUnitID: AdMobConfig.bannerUnitID)
+                            .frame(height: 60)
+                            .premiumCardStyle()
+                    }
                 }
                 .padding()
             }
@@ -61,7 +69,13 @@ private struct MonthlyPrayerList: View {
     var body: some View {
         LazyVStack(spacing: 10) {
             ForEach(days, id: \.self) { day in
-                PrayerDayListRow(day: day, entries: PrayerScheduleProvider.entries(for: day))
+                let entries = PrayerScheduleProvider.entries(for: day)
+                NavigationLink {
+                    CalendarDayDetailView(day: day, entries: entries)
+                } label: {
+                    PrayerDayListRow(day: day, entries: entries)
+                }
+                .buttonStyle(.plain)
             }
         }
     }
@@ -73,8 +87,13 @@ private struct PrayerDayListRow: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text(day, format: .dateTime.weekday(.wide).day().month(.abbreviated))
-                .font(.headline)
+            HStack {
+                Text(day, format: .dateTime.weekday(.wide).day().month(.abbreviated))
+                    .font(.headline)
+                Spacer()
+                Image(systemName: "chevron.right")
+                    .foregroundStyle(.tertiary)
+            }
 
             VStack(spacing: 6) {
                 ForEach(entries) { entry in
@@ -92,6 +111,40 @@ private struct PrayerDayListRow: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .premiumCardStyle()
+    }
+}
+
+private struct CalendarDayDetailView: View {
+    @EnvironmentObject private var adManager: AdManager
+
+    let day: Date
+    let entries: [PrayerEntry]
+
+    var body: some View {
+        List {
+            Section(day.formatted(.dateTime.weekday(.wide).day().month().year())) {
+                ForEach(entries) { entry in
+                    HStack {
+                        Label(entry.prayer.title, systemImage: entry.prayer.symbolName)
+                        Spacer()
+                        Text(entry.date, format: .dateTime.hour().minute())
+                            .monospacedDigit()
+                    }
+                }
+            }
+
+            if adManager.shouldShowBannerAds {
+                Section {
+                    BannerAdView(adUnitID: AdMobConfig.bannerUnitID)
+                        .frame(height: 60)
+                        .listRowInsets(EdgeInsets())
+                }
+            }
+        }
+        .navigationTitle("Gun Detay")
+        .onAppear {
+            adManager.showInterstitialIfEligible(for: .calendarDayDetail)
+        }
     }
 }
 

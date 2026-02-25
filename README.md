@@ -48,6 +48,28 @@ Not: Servis erisim/limit kurallari operasyonel olarak proje disinda takip edilir
   - `Kible (Harita)`
   - `Hakkinda / Kaynaklar`
 
+## Brand ve Icon
+
+- Premium icon konsepti: Altin hilal + minimal minare + lacivert zemin
+- iOS icon varyantlari:
+  - `icon-main.png`
+  - `icon-dark.png`
+  - `icon-tinted.png`
+- Otomatik icon uretimi:
+
+```bash
+swift scripts/generate_app_icon.swift \
+  /Users/samet/Desktop/Namazım/Namazım/Assets.xcassets/AppIcon.appiconset
+```
+
+## AdMob (iOS)
+
+- SDK: `GoogleMobileAds` (Swift Package Manager)
+- App ID: `ca-app-pub-3321006469806168~2800259705`
+- Banner Unit ID: `ca-app-pub-3321006469806168/6554983522`
+- Detayli strateji ve policy notlari:
+  - `docs/Monetization_AdMob_iOS.md`
+
 ## iOS Build
 
 ```bash

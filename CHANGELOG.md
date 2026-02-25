@@ -2,6 +2,30 @@
 
 Bu dosya projedeki surum degisimlerini takip eder.
 
+## [0.1.5] - 2026-02-25
+
+### Added
+
+- AdMob SDK entegrasyonu eklendi (SPM `GoogleMobileAds`).
+- Banner reklam entegrasyonu eklendi (`Takvim` ve `Hadis` ekranlari altinda).
+- Interstitial reklam stratejisi eklendi:
+  - `Takvim -> Gun Detay`
+  - `Hadis -> Favoriler`
+  - gunluk max 2 gosterim limiti
+- Rewarded reklam ile \"Reklamsiz 24 Saat\" kilidi eklendi.
+- App Open reklam stratejisi eklendi (ilk acilis haric, gunde 1 kez).
+- Premium marka icon seti eklendi:
+  - `icon-main.png`
+  - `icon-dark.png`
+  - `icon-tinted.png`
+- Icon uretim scripti eklendi: `scripts/generate_app_icon.swift`.
+- AdMob strateji dokumani eklendi: `docs/Monetization_AdMob_iOS.md`.
+
+### Changed
+
+- `Info.plist` icine `GADApplicationIdentifier` eklendi.
+- `Ayarlar` ekranina Premium/Reklam odakli rewarded unlock bolumu eklendi.
+
 ## [0.1.4] - 2026-02-25
 
 ### Added
