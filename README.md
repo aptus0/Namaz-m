@@ -8,7 +8,7 @@ Bu surumde hedeflenen ana moduller:
 
 1. Vakitler
 2. Ramazan / Takvim
-3. Gunun Icerigi (Hadis)
+3. Hadis (Gunluk / Kitaplar / Favoriler)
 4. Ayarlar
 
 Detayli kapsam ve ekran bazli icerik icin:
@@ -44,9 +44,20 @@ Not: Servis erisim/limit kurallari operasyonel olarak proje disinda takip edilir
 - Tablar: `Vakitler`, `Takvim`, `Hadis`, `Ayarlar`
 - Alt ekranlar:
   - `Bildirim Ayarlari`
+  - `Hadis Okuyucu`
   - `Kible (Pusula)`
   - `Kible (Harita)`
   - `Hakkinda / Kaynaklar`
+
+## Hadis Modulu
+
+- Ust sekmeler: `Gunluk`, `Kitaplar`, `Favoriler`
+- Okuyucu ekrani: bolum bazli hadis kartlari, onceki/sonraki gezinme
+- Kisisellestirme:
+  - varsayilan hadis kitabi
+  - yazi boyutu (kucuk/orta/buyuk)
+  - sade okuma modu
+- Bildirim akisinda deterministic gunun hadisi secimi ve hadis deep-link payload'i
 
 ## Brand ve Icon
 

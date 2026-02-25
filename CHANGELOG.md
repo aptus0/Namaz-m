@@ -2,6 +2,34 @@
 
 Bu dosya projedeki surum degisimlerini takip eder.
 
+## [0.1.6] - 2026-02-25
+
+### Added
+
+- Hadis modulu yeniden tasarlandi: `Gunluk / Kitaplar / Favoriler` sekmeli yapi.
+- Kitap ici okuma deneyimi eklendi: `HadithReaderView` (bolum, hadis kartlari, onceki/sonraki gezinme).
+- Hadis veri semasi genisletildi:
+  - `HadithBook`
+  - `HadithSection`
+  - `HadithItem`
+  - `HadithDailySelection`
+- Dovgulu gunun hadisi secim algoritmasi eklendi:
+  - `index = (dayOfYear + installSeed) % poolCount`
+- Bildirim hadis payload akisi eklendi:
+  - `Oku` aksiyonunda okuyucuya deep-link
+  - `Kaydet` aksiyonunda favoriye ekleme
+
+### Changed
+
+- Hadis bildirim uretimi tekrarlandi:
+  - tekrarli tek request yerine ileriye donuk gunluk planlama (14 gun)
+  - namaz oncesi hadis metni secimi deterministic hale getirildi
+- Ayarlar ekranina Hadis paneli eklendi:
+  - varsayilan koleksiyon
+  - yazi boyutu
+  - sade okuma modu
+- Bildirim ayarlari ekranina varsayilan hadis kitabi secimi eklendi.
+
 ## [0.1.5] - 2026-02-25
 
 ### Added

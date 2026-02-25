@@ -4,6 +4,15 @@ struct NotificationSettingsView: View {
     @EnvironmentObject private var appState: AppState
     @EnvironmentObject private var notificationManager: NotificationManager
 
+    private var defaultHadithBookBinding: Binding<String> {
+        Binding(
+            get: { appState.hadithDefaultBookID ?? "featured" },
+            set: { newValue in
+                appState.hadithDefaultBookID = (newValue == "featured") ? nil : newValue
+            }
+        )
+    }
+
     var body: some View {
         Form {
             Section("Namaz Hatirlatici") {
@@ -30,6 +39,13 @@ struct NotificationSettingsView: View {
                 }
 
                 Toggle("Namaz oncesi hadis", isOn: $appState.hadithNearPrayerEnabled)
+
+                Picker("Varsayilan kitap", selection: defaultHadithBookBinding) {
+                    Text("One Cikan Koleksiyon").tag("featured")
+                    ForEach(HadithRepository.books) { book in
+                        Text(book.title).tag(book.id)
+                    }
+                }
             }
 
             Section("Izin ve Guclu Calisma") {

@@ -8,6 +8,15 @@ struct SettingsScreenView: View {
 
     @State private var isCityPickerPresented = false
 
+    private var defaultHadithBookBinding: Binding<String> {
+        Binding(
+            get: { appState.hadithDefaultBookID ?? "featured" },
+            set: { newValue in
+                appState.hadithDefaultBookID = (newValue == "featured") ? nil : newValue
+            }
+        )
+    }
+
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -77,6 +86,37 @@ struct SettingsScreenView: View {
                                 Text(option.rawValue).tag(option)
                             }
                         }
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .premiumCardStyle()
+
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text("Hadis")
+                            .font(.headline)
+
+                        Toggle("Gunluk hadis bildirimi", isOn: $appState.hadithDailyEnabled)
+
+                        if appState.hadithDailyEnabled {
+                            DatePicker("Saat", selection: $appState.hadithDailyTime, displayedComponents: .hourAndMinute)
+                        }
+
+                        Toggle("Namaz oncesi hadis", isOn: $appState.hadithNearPrayerEnabled)
+
+                        Picker("Varsayilan Koleksiyon", selection: defaultHadithBookBinding) {
+                            Text("One Cikan Koleksiyon").tag("featured")
+                            ForEach(HadithRepository.books) { book in
+                                Text(book.title).tag(book.id)
+                            }
+                        }
+
+                        Picker("Yazi Boyutu", selection: $appState.hadithTextSize) {
+                            ForEach(HadithTextSize.allCases) { size in
+                                Text(size.rawValue).tag(size)
+                            }
+                        }
+                        .pickerStyle(.segmented)
+
+                        Toggle("Sade okuma modu", isOn: $appState.hadithReadingModeSimple)
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .premiumCardStyle()

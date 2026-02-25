@@ -79,10 +79,10 @@ struct PrayerTimeRowCard: View {
 }
 
 struct ContentTypeBadge: View {
-    let type: DailyContentType
+    let text: String
 
     var body: some View {
-        Text(type.rawValue)
+        Text(text)
             .font(.caption.weight(.semibold))
             .padding(.horizontal, 10)
             .padding(.vertical, 5)

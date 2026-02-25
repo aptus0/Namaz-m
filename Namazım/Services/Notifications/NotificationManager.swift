@@ -7,6 +7,8 @@ import UserNotifications
 final class NotificationManager: NSObject, ObservableObject {
     @Published private(set) var authorizationStatus: UNAuthorizationStatus = .notDetermined
     @Published var activeAlarm: AlarmEvent?
+    @Published var pendingHadithDeepLink: HadithDeepLink?
+    @Published var pendingHadithSave: HadithDeepLink?
 
     private let center = UNUserNotificationCenter.current()
     private var isConfigured = false
@@ -132,6 +134,18 @@ final class NotificationManager: NSObject, ObservableObject {
             options: [.destructive]
         )
 
+        let hadithOpenAction = UNNotificationAction(
+            identifier: NotificationActionID.hadithOpen,
+            title: "Oku",
+            options: [.foreground]
+        )
+
+        let hadithSaveAction = UNNotificationAction(
+            identifier: NotificationActionID.hadithSave,
+            title: "Kaydet",
+            options: []
+        )
+
         let prayerAlert = UNNotificationCategory(
             identifier: NotificationCategoryID.prayerAlert,
             actions: [],
@@ -148,14 +162,14 @@ final class NotificationManager: NSObject, ObservableObject {
 
         let hadithDaily = UNNotificationCategory(
             identifier: NotificationCategoryID.hadithDaily,
-            actions: [],
+            actions: [hadithOpenAction, hadithSaveAction],
             intentIdentifiers: [],
             options: []
         )
 
         let hadithNearPrayer = UNNotificationCategory(
             identifier: NotificationCategoryID.hadithNearPrayer,
-            actions: [],
+            actions: [hadithOpenAction, hadithSaveAction],
             intentIdentifiers: [],
             options: []
         )
@@ -250,6 +264,16 @@ extension NotificationManager: UNUserNotificationCenterDelegate {
             case NotificationActionID.dismiss:
                 self.activeAlarm = nil
 
+            case NotificationActionID.hadithSave:
+                if let hadithLink = Self.extractHadithPayload(from: response.notification.request.content.userInfo) {
+                    self.pendingHadithSave = hadithLink
+                }
+
+            case NotificationActionID.hadithOpen:
+                if let hadithLink = Self.extractHadithPayload(from: response.notification.request.content.userInfo) {
+                    self.pendingHadithDeepLink = hadithLink
+                }
+
             default:
                 if categoryID == "CHANNEL_PRAYER_ALARM", let payload {
                     self.activeAlarm = AlarmEvent(
@@ -257,6 +281,10 @@ extension NotificationManager: UNUserNotificationCenterDelegate {
                         prayer: payload.prayer,
                         fireDate: payload.fireDate
                     )
+                } else if categoryID == NotificationCategoryID.hadithDaily || categoryID == NotificationCategoryID.hadithNearPrayer {
+                    if let hadithLink = Self.extractHadithPayload(from: response.notification.request.content.userInfo) {
+                        self.pendingHadithDeepLink = hadithLink
+                    }
                 }
             }
 
@@ -273,14 +301,25 @@ private extension NotificationManager {
 
     nonisolated static func extractPayload(from userInfo: [AnyHashable: Any]) -> AlarmPayload? {
         guard
-            let prayerRaw = userInfo[NotificationUserInfoKey.prayerName] as? String,
+            let prayerRaw = userInfo["prayerName"] as? String,
             let prayer = PrayerName(rawValue: prayerRaw)
         else {
             return nil
         }
 
-        let timestamp = userInfo[NotificationUserInfoKey.fireDate] as? TimeInterval
+        let timestamp = userInfo["fireDate"] as? TimeInterval
         let fireDate = timestamp.map(Date.init(timeIntervalSince1970:)) ?? Date()
         return AlarmPayload(prayer: prayer, fireDate: fireDate)
+    }
+
+    nonisolated static func extractHadithPayload(from userInfo: [AnyHashable: Any]) -> HadithDeepLink? {
+        guard
+            let bookID = userInfo["hadithBookID"] as? String,
+            let hadithID = userInfo["hadithID"] as? String
+        else {
+            return nil
+        }
+
+        return HadithDeepLink(bookID: bookID, hadithID: hadithID)
     }
 }

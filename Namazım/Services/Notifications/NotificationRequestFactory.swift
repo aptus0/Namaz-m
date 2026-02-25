@@ -29,7 +29,11 @@ enum NotificationRequestFactory {
                             if state.hadithNearPrayerEnabled {
                                 let hadithDate = preDate.addingTimeInterval(6)
                                 if hadithDate > now {
-                                    let hadithContent = hadithNearPrayerContent(prayer: setting.prayer)
+                                    let hadithContent = hadithNearPrayerContent(
+                                        prayer: setting.prayer,
+                                        fireDate: hadithDate,
+                                        state: state
+                                    )
                                     requests.append(makeRequest(
                                         id: "hadith-near-prayer-\(setting.prayer.rawValue)-\(Int(hadithDate.timeIntervalSince1970))",
                                         date: hadithDate,
@@ -53,31 +57,58 @@ enum NotificationRequestFactory {
         }
 
         if state.hadithDailyEnabled {
-            let dailyRequest = dailyHadithRequest(time: state.hadithDailyTime)
-            requests.append(dailyRequest)
+            requests.append(contentsOf: dailyHadithRequests(time: state.hadithDailyTime, state: state, now: now, days: 14))
         }
 
         return requests
     }
 
-    private static func dailyHadithRequest(time: Date) -> UNNotificationRequest {
+    private static func dailyHadithRequests(
+        time: Date,
+        state: AppState,
+        now: Date,
+        days: Int
+    ) -> [UNNotificationRequest] {
         let calendar = Calendar.current
-        var components = calendar.dateComponents([.hour, .minute], from: time)
-        components.second = 0
+        let timeComponents = calendar.dateComponents([.hour, .minute], from: time)
 
-        let content = UNMutableNotificationContent()
-        content.title = "Gunun Hadisi"
-        content.body = DailyContentRepository.hadithSnippets.first ?? "Mujdeleyiniz, nefret ettirmeyiniz."
-        content.sound = .default
-        content.categoryIdentifier = NotificationCategoryID.hadithDaily
-        content.userInfo = [NotificationUserInfoKey.payloadKind: NotificationPayloadKind.hadithDaily.rawValue]
+        return (0..<days).compactMap { dayOffset in
+            guard let day = calendar.date(byAdding: .day, value: dayOffset, to: now),
+                  let fireDate = calendar.date(
+                    bySettingHour: timeComponents.hour ?? 9,
+                    minute: timeComponents.minute ?? 0,
+                    second: 0,
+                    of: day
+                  ),
+                  fireDate > now
+            else {
+                return nil
+            }
 
-        if #available(iOS 15.0, *) {
-            content.interruptionLevel = .active
+            let selection = state.dailyHadithSelection(for: fireDate)
+            let body = HadithRepository.shortSnippet(for: selection.hadith, maxLength: 110)
+
+            let content = UNMutableNotificationContent()
+            content.title = "Gunun Hadisi"
+            content.body = body
+            content.sound = .default
+            content.categoryIdentifier = NotificationCategoryID.hadithDaily
+            content.userInfo = [
+                NotificationUserInfoKey.payloadKind: NotificationPayloadKind.hadithDaily.rawValue,
+                NotificationUserInfoKey.hadithID: selection.hadith.id,
+                NotificationUserInfoKey.hadithBookID: selection.book.id
+            ]
+
+            if #available(iOS 15.0, *) {
+                content.interruptionLevel = .active
+            }
+
+            return makeRequest(
+                id: "hadith-daily-\(Int(fireDate.timeIntervalSince1970))",
+                date: fireDate,
+                content: content
+            )
         }
-
-        let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: true)
-        return UNNotificationRequest(identifier: "hadith-daily-repeating", content: content, trigger: trigger)
     }
 
     private static func prayerReminderContent(setting: PrayerReminderSetting, fireDate: Date) -> UNMutableNotificationContent {
@@ -100,16 +131,26 @@ enum NotificationRequestFactory {
         return content
     }
 
-    private static func hadithNearPrayerContent(prayer: PrayerName) -> UNMutableNotificationContent {
+    @MainActor
+    private static func hadithNearPrayerContent(
+        prayer: PrayerName,
+        fireDate: Date,
+        state: AppState
+    ) -> UNMutableNotificationContent {
+        let shiftedDate = Calendar.current.date(byAdding: .minute, value: prayer.orderIndex * 11, to: fireDate) ?? fireDate
+        let selection = state.dailyHadithSelection(for: shiftedDate)
+
         let content = UNMutableNotificationContent()
         content.title = "\(prayer.title) yaklasiyor"
-        content.body = DailyContentRepository.hadithSnippets.randomElement() ?? "Kolaylastiriniz, zorlastirmayiniz."
+        content.body = HadithRepository.shortSnippet(for: selection.hadith, maxLength: 100)
         content.sound = .default
         content.categoryIdentifier = NotificationCategoryID.hadithNearPrayer
         content.threadIdentifier = "hadith-near-prayer"
         content.userInfo = [
             NotificationUserInfoKey.payloadKind: NotificationPayloadKind.hadithNearPrayer.rawValue,
-            NotificationUserInfoKey.prayerName: prayer.rawValue
+            NotificationUserInfoKey.prayerName: prayer.rawValue,
+            NotificationUserInfoKey.hadithID: selection.hadith.id,
+            NotificationUserInfoKey.hadithBookID: selection.book.id
         ]
 
         if #available(iOS 15.0, *) {

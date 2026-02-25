@@ -43,6 +43,23 @@ enum PrayerName: String, CaseIterable, Identifiable, Codable {
             return "moon"
         }
     }
+
+    var orderIndex: Int {
+        switch self {
+        case .imsak:
+            return 0
+        case .gunes:
+            return 1
+        case .ogle:
+            return 2
+        case .ikindi:
+            return 3
+        case .aksam:
+            return 4
+        case .yatsi:
+            return 5
+        }
+    }
 }
 
 struct PrayerReminderSetting: Identifiable, Equatable {

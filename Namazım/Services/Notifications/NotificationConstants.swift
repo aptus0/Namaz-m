@@ -10,12 +10,16 @@ enum NotificationCategoryID {
 enum NotificationActionID {
     static let snooze = "ACTION_SNOOZE_5_MIN"
     static let dismiss = "ACTION_DISMISS"
+    static let hadithOpen = "ACTION_HADITH_OPEN"
+    static let hadithSave = "ACTION_HADITH_SAVE"
 }
 
 enum NotificationUserInfoKey {
     static let payloadKind = "payloadKind"
     static let prayerName = "prayerName"
     static let fireDate = "fireDate"
+    static let hadithID = "hadithID"
+    static let hadithBookID = "hadithBookID"
 }
 
 enum NotificationPayloadKind: String {
@@ -23,4 +27,9 @@ enum NotificationPayloadKind: String {
     case prayerAlarm
     case hadithDaily
     case hadithNearPrayer
+}
+
+struct HadithDeepLink: Equatable, Sendable {
+    let bookID: String
+    let hadithID: String
 }
