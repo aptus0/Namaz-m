@@ -28,9 +28,10 @@ final class AdManager: NSObject, ObservableObject {
         restorePersistedState()
 
         MobileAds.shared.start { [weak self] _ in
-            Task { @MainActor in
-                self?.isSDKReady = true
-                self?.loadAllFormats()
+            DispatchQueue.main.async {
+                guard let self else { return }
+                self.isSDKReady = true
+                self.loadAllFormats()
             }
         }
     }
@@ -106,14 +107,15 @@ final class AdManager: NSObject, ObservableObject {
 
         let request = Request()
         InterstitialAd.load(with: AdMobConfig.interstitialUnitID, request: request) { [weak self] ad, error in
-            Task { @MainActor in
+            DispatchQueue.main.async {
+                guard let self else { return }
                 if let error {
                     print("Interstitial load error: \(error.localizedDescription)")
                     return
                 }
 
-                self?.interstitial = ad
-                self?.interstitial?.fullScreenContentDelegate = self
+                self.interstitial = ad
+                self.interstitial?.fullScreenContentDelegate = self
             }
         }
     }
@@ -123,14 +125,15 @@ final class AdManager: NSObject, ObservableObject {
 
         let request = Request()
         RewardedAd.load(with: AdMobConfig.rewardedUnitID, request: request) { [weak self] ad, error in
-            Task { @MainActor in
+            DispatchQueue.main.async {
+                guard let self else { return }
                 if let error {
                     print("Rewarded load error: \(error.localizedDescription)")
                     return
                 }
 
-                self?.rewarded = ad
-                self?.rewarded?.fullScreenContentDelegate = self
+                self.rewarded = ad
+                self.rewarded?.fullScreenContentDelegate = self
             }
         }
     }
@@ -140,14 +143,15 @@ final class AdManager: NSObject, ObservableObject {
 
         let request = Request()
         AppOpenAd.load(with: AdMobConfig.appOpenUnitID, request: request) { [weak self] ad, error in
-            Task { @MainActor in
+            DispatchQueue.main.async {
+                guard let self else { return }
                 if let error {
                     print("AppOpen load error: \(error.localizedDescription)")
                     return
                 }
 
-                self?.appOpen = ad
-                self?.appOpen?.fullScreenContentDelegate = self
+                self.appOpen = ad
+                self.appOpen?.fullScreenContentDelegate = self
             }
         }
     }

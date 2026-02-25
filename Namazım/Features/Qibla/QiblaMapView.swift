@@ -12,10 +12,12 @@ struct QiblaMapView: View {
     @EnvironmentObject private var appState: AppState
     @EnvironmentObject private var locationManager: LocationManager
 
-    @State private var region = MKCoordinateRegion(
+    private static let defaultRegion = MKCoordinateRegion(
         center: CLLocationCoordinate2D(latitude: 41.0082, longitude: 28.9784),
         span: MKCoordinateSpan(latitudeDelta: 0.08, longitudeDelta: 0.08)
     )
+
+    @State private var cameraPosition: MapCameraPosition = .region(Self.defaultRegion)
 
     private var annotationItems: [QiblaMapAnnotation] {
         guard let coordinate = locationManager.currentLocation?.coordinate else { return [] }
@@ -46,19 +48,21 @@ struct QiblaMapView: View {
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else {
-                Map(coordinateRegion: $region, annotationItems: annotationItems) { item in
-                    MapAnnotation(coordinate: item.coordinate) {
-                        VStack(spacing: 4) {
-                            Image(systemName: "location.north.circle.fill")
-                                .font(.system(size: 36))
-                                .foregroundStyle(.green)
-                                .rotationEffect(.degrees(item.bearing))
+                Map(position: $cameraPosition) {
+                    ForEach(annotationItems) { item in
+                        Annotation("Kible Yonu", coordinate: item.coordinate, anchor: .center) {
+                            VStack(spacing: 4) {
+                                Image(systemName: "location.north.circle.fill")
+                                    .font(.system(size: 36))
+                                    .foregroundStyle(.green)
+                                    .rotationEffect(.degrees(item.bearing))
 
-                            Text("\(Int(item.bearing))°")
-                                .font(.caption2.bold())
-                                .padding(.horizontal, 6)
-                                .padding(.vertical, 3)
-                                .background(Capsule().fill(.ultraThinMaterial))
+                                Text("\(Int(item.bearing))°")
+                                    .font(.caption2.bold())
+                                    .padding(.horizontal, 6)
+                                    .padding(.vertical, 3)
+                                    .background(Capsule().fill(.ultraThinMaterial))
+                            }
                         }
                     }
                 }
@@ -87,7 +91,12 @@ struct QiblaMapView: View {
         .onChange(of: locationManager.currentLocation) { _, location in
             guard let coordinate = location?.coordinate else { return }
             withAnimation(.easeInOut(duration: 0.3)) {
-                region.center = coordinate
+                cameraPosition = .region(
+                    MKCoordinateRegion(
+                        center: coordinate,
+                        span: Self.defaultRegion.span
+                    )
+                )
             }
         }
         .onChange(of: locationManager.resolvedCity) { _, city in
