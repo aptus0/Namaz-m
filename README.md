@@ -24,12 +24,27 @@ Oncelik:
 
 Not: Servis erisim/limit kurallari operasyonel olarak proje disinda takip edilir.
 
-## Mimari Hedef (V2)
+## iOS Mimari Hedef (V2)
 
-- MVVM + Repository
-- Data / Domain / UI katmanlari
-- Cache: Room (bugun + aylik vakitler)
-- Offline goruntuleme
+- SwiftUI tabanli moduler yapi
+- `Core` (model + util), `Features` (ekranlar), `Services` (bildirim)
+- App state + local notification scheduler
+- Alarm/hatirlatma akislarinin merkezi yonetimi
+
+## iOS Dosya Yapisi
+
+- `Namazım/Core`
+- `Namazım/Features`
+- `Namazım/Services`
+- `Namazım/Namaz_mApp.swift` (uygulama girisi)
+
+## iOS Build
+
+```bash
+DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer \
+xcodebuild -project Namazım.xcodeproj -scheme Namazım \
+-destination 'platform=iOS Simulator,name=iPhone 17 Pro' build
+```
 
 ## Kisa Yol Haritasi
 

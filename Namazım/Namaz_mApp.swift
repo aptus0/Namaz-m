@@ -6,27 +6,37 @@
 //
 
 import SwiftUI
-import SwiftData
 
 @main
 struct Namaz_mApp: App {
-    var sharedModelContainer: ModelContainer = {
-        let schema = Schema([
-            Item.self,
-        ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-
-        do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
-        } catch {
-            fatalError("Could not create ModelContainer: \(error)")
-        }
-    }()
+    @Environment(\.scenePhase) private var scenePhase
+    @StateObject private var appState = AppState()
+    @StateObject private var notificationManager = NotificationManager()
 
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(appState)
+                .environmentObject(notificationManager)
+                .onAppear {
+                    notificationManager.configureIfNeeded()
+                }
+                .task {
+                    await notificationManager.requestAuthorizationIfNeeded()
+                    await notificationManager.rescheduleAll(using: appState)
+                }
+                .onChange(of: appState.notificationFingerprint) { _, _ in
+                    Task {
+                        await notificationManager.rescheduleAll(using: appState)
+                    }
+                }
+                .onChange(of: scenePhase) { _, newPhase in
+                    guard newPhase == .active else { return }
+                    Task {
+                        await notificationManager.refreshAuthorizationStatus()
+                        await notificationManager.rescheduleAll(using: appState)
+                    }
+                }
         }
-        .modelContainer(sharedModelContainer)
     }
 }

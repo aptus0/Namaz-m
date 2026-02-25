@@ -2,6 +2,25 @@
 
 Bu dosya projedeki surum degisimlerini takip eder.
 
+## [0.1.3] - 2026-02-25
+
+### Added
+
+- iOS tarafinda temiz klasorlenmis yeni mimari kuruldu: `Core`, `Features`, `Services`.
+- 4 ana ekran moduler dosyalara ayrildi: Vakitler, Takvim, Gunun Icerigi, Ayarlar.
+- iOS bildirim altyapisi eklendi:
+  - Namaz hatirlatici (oncesi + vakit girdi + alarm modu)
+  - Gunluk hadis bildirimi
+  - Namaz oncesi mini hadis bildirimi
+  - Ertele/Kapat aksiyonlu alarm akisi
+- Alarm gorunumu (`AlarmRingView`) full screen akisla uygulandi.
+- Notification ayarlari UI'si her vakit icin ac/kapat + sure + mod + ses secimi ile eklendi.
+
+### Changed
+
+- SwiftData template yapisi kaldirildi ve uygulama girisi (`Namaz_mApp`) yeni state + notification yonetimiyle guncellendi.
+- Proje iPhone 17 Pro simulator hedefinde basarili build verdi.
+
 ## [0.1.2] - 2026-02-25
 
 ### Added
