@@ -3,162 +3,126 @@ import SwiftUI
 struct SettingsScreenView: View {
     @EnvironmentObject private var appState: AppState
     @EnvironmentObject private var notificationManager: NotificationManager
+    @EnvironmentObject private var locationManager: LocationManager
 
     @State private var isCityPickerPresented = false
 
     var body: some View {
         NavigationStack {
-            Form {
-                Section("Il Ayari") {
-                    Button {
-                        isCityPickerPresented = true
-                    } label: {
+            ScrollView {
+                VStack(spacing: 16) {
+                    VStack(alignment: .leading, spacing: 12) {
                         HStack {
                             Label("Secili Il", systemImage: "mappin.and.ellipse")
                             Spacer()
                             Text(appState.selectedCity)
-                                .foregroundStyle(.secondary)
+                                .fontWeight(.semibold)
                         }
+
+                        Button("Ili Degistir") {
+                            isCityPickerPresented = true
+                        }
+                        .buttonStyle(.bordered)
                     }
-                }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .premiumCardStyle()
 
-                Section("Namaz Hatirlatici") {
-                    Toggle("Namaz bildirimleri", isOn: $appState.prayerNotificationsEnabled)
-
-                    if appState.prayerNotificationsEnabled {
-                        ForEach($appState.prayerSettings) { $setting in
-                            PrayerNotificationSettingCard(setting: $setting)
-                        }
-
-                        Button {
-                            notificationManager.sendTestNotification(using: appState)
+                    VStack(alignment: .leading, spacing: 10) {
+                        NavigationLink {
+                            NotificationSettingsView()
                         } label: {
-                            Label("Test bildirimi gonder", systemImage: "paperplane.fill")
+                            settingRow(title: "Bildirim Ayarlari", symbol: "bell.badge")
+                        }
+
+                        NavigationLink {
+                            QiblaCompassView()
+                        } label: {
+                            settingRow(title: "Kible (Pusula)", symbol: "location.north")
+                        }
+
+                        NavigationLink {
+                            QiblaMapView()
+                        } label: {
+                            settingRow(title: "Kible (Harita)", symbol: "map")
+                        }
+
+                        NavigationLink {
+                            AboutView()
+                        } label: {
+                            settingRow(title: "Hakkinda / Kaynaklar", symbol: "info.circle")
                         }
                     }
-                }
+                    .premiumCardStyle()
 
-                Section("Hadis Bildirimleri") {
-                    Toggle("Gunluk hadis bildirimi", isOn: $appState.hadithDailyEnabled)
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text("Tema ve Veri")
+                            .font(.headline)
 
-                    if appState.hadithDailyEnabled {
-                        DatePicker("Saat", selection: $appState.hadithDailyTime, displayedComponents: .hourAndMinute)
-                    }
+                        Picker("Tema", selection: $appState.theme) {
+                            ForEach(ThemeOption.allCases) { option in
+                                Text(option.rawValue).tag(option)
+                            }
+                        }
+                        .pickerStyle(.segmented)
 
-                    Toggle("Namaz oncesi hadis", isOn: $appState.hadithNearPrayerEnabled)
-                }
+                        Picker("Aksan", selection: $appState.accent) {
+                            ForEach(AccentOption.allCases) { option in
+                                Text(option.rawValue).tag(option)
+                            }
+                        }
 
-                Section("Tema ve Veri") {
-                    Picker("Tema", selection: $appState.theme) {
-                        ForEach(ThemeOption.allCases) { option in
-                            Text(option.rawValue).tag(option)
+                        Picker("Kaynak", selection: $appState.dataSource) {
+                            ForEach(DataSourceOption.allCases) { option in
+                                Text(option.rawValue).tag(option)
+                            }
                         }
                     }
-                    .pickerStyle(.segmented)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .premiumCardStyle()
 
-                    Picker("Aksan rengi", selection: $appState.accent) {
-                        ForEach(AccentOption.allCases) { option in
-                            Text(option.rawValue).tag(option)
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Izin Durumlari")
+                            .font(.headline)
+
+                        HStack {
+                            Text("Konum")
+                            Spacer()
+                            Text(locationManager.statusDescription)
+                                .foregroundStyle(.secondary)
+                                .multilineTextAlignment(.trailing)
+                        }
+
+                        HStack {
+                            Text("Bildirim")
+                            Spacer()
+                            Text(notificationManager.statusTitle)
+                                .foregroundStyle(.secondary)
+                                .multilineTextAlignment(.trailing)
                         }
                     }
-
-                    Picker("Veri kaynagi", selection: $appState.dataSource) {
-                        ForEach(DataSourceOption.allCases) { option in
-                            Text(option.rawValue).tag(option)
-                        }
-                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .premiumCardStyle()
                 }
-
-                Section("Guclu Calisma Ayarlari") {
-                    HStack {
-                        Text("Izin durumu")
-                        Spacer()
-                        Text(notificationManager.statusTitle)
-                            .foregroundStyle(.secondary)
-                    }
-
-                    Button("Bildirim izinlerini ac") {
-                        notificationManager.openNotificationSettings()
-                    }
-
-                    Button("Uygulama ayarlarini ac") {
-                        notificationManager.openAppSettings()
-                    }
-
-                    Text("Bildirimlerin kacmamasi icin bildirim izni ve arka plan ayarlarinin acik olmasi onerilir.")
-                        .font(.footnote)
-                        .foregroundStyle(.secondary)
-                }
-
-                Section("Hakkinda") {
-                    NavigationLink {
-                        AboutView()
-                    } label: {
-                        Label("Uygulama Bilgisi", systemImage: "info.circle")
-                    }
-                }
+                .padding()
             }
             .navigationTitle("Ayarlar")
+            .premiumScreenBackground()
         }
         .sheet(isPresented: $isCityPickerPresented) {
             CityPickerSheet()
                 .environmentObject(appState)
         }
     }
-}
 
-private struct PrayerNotificationSettingCard: View {
-    @Binding var setting: PrayerReminderSetting
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            Toggle(setting.prayer.title, isOn: $setting.isEnabled)
-
-            if setting.isEnabled {
-                Picker("Hatirlatma", selection: $setting.leadTime) {
-                    ForEach(ReminderLeadTime.allCases) { option in
-                        Text(option.title).tag(option)
-                    }
-                }
-
-                Picker("Mod", selection: $setting.mode) {
-                    ForEach(ReminderMode.allCases) { mode in
-                        Text(mode.rawValue).tag(mode)
-                    }
-                }
-                .pickerStyle(.segmented)
-
-                Picker("Ses", selection: $setting.tone) {
-                    ForEach(AlarmTone.allCases) { tone in
-                        Text(tone.rawValue).tag(tone)
-                    }
-                }
-            }
+    @ViewBuilder
+    private func settingRow(title: String, symbol: String) -> some View {
+        HStack {
+            Label(title, systemImage: symbol)
+            Spacer()
+            Image(systemName: "chevron.right")
+                .foregroundStyle(.tertiary)
         }
-        .padding(.vertical, 4)
-    }
-}
-
-private struct AboutView: View {
-    private var appVersionText: String {
-        let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "0.1.2"
-        let build = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? "1"
-        return "\(version) (\(build))"
-    }
-
-    var body: some View {
-        List {
-            Section("Uygulama") {
-                LabeledContent("Surum", value: appVersionText)
-                LabeledContent("Veri Kaynagi", value: "Diyanet / Alternatif")
-            }
-
-            Section("Not") {
-                Text("Alarm benzeri akis iOS kisitlari dahilinde bildirim + acilisla uygulanmistir.")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-            }
-        }
-        .navigationTitle("Hakkinda")
+        .foregroundStyle(.primary)
+        .padding(.vertical, 8)
     }
 }

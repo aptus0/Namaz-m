@@ -4,6 +4,7 @@ import Combine
 @MainActor
 final class AppState: ObservableObject {
     @Published var selectedCity: String = "Kocaeli"
+    @Published var hasCompletedOnboarding: Bool = UserDefaults.standard.bool(forKey: Keys.onboardingCompleted)
 
     @Published var theme: ThemeOption = .system
     @Published var accent: AccentOption = .premiumBlue
@@ -53,4 +54,33 @@ final class AppState: ObservableObject {
             favoriteContentIDs.insert(content.id)
         }
     }
+
+    func completeOnboarding() {
+        hasCompletedOnboarding = true
+        UserDefaults.standard.set(true, forKey: Keys.onboardingCompleted)
+    }
+
+    func applyDetectedCity(_ city: String?) {
+        guard let city, !city.isEmpty else { return }
+
+        let normalizedDetected = normalize(city)
+        if let match = cities.first(where: { normalize($0) == normalizedDetected }) {
+            selectedCity = match
+            return
+        }
+
+        if let looseMatch = cities.first(where: { normalize($0).contains(normalizedDetected) || normalizedDetected.contains(normalize($0)) }) {
+            selectedCity = looseMatch
+        }
+    }
+
+    private func normalize(_ value: String) -> String {
+        value
+            .folding(options: [.diacriticInsensitive, .caseInsensitive], locale: Locale(identifier: "tr_TR"))
+            .replacingOccurrences(of: " ", with: "")
+    }
+}
+
+private enum Keys {
+    static let onboardingCompleted = "onboardingCompleted"
 }

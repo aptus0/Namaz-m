@@ -43,11 +43,7 @@ struct DailyContentScreenView: View {
                             .foregroundStyle(.secondary)
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding()
-                    .background(
-                        RoundedRectangle(cornerRadius: 18, style: .continuous)
-                            .fill(Color(.secondarySystemBackground))
-                    )
+                    .premiumCardStyle()
 
                     VStack(spacing: 10) {
                         ShareLink(item: selectedContent.shareText) {
@@ -88,6 +84,7 @@ struct DailyContentScreenView: View {
                 .padding()
             }
             .navigationTitle("Gunun Icerigi")
+            .premiumScreenBackground()
             .alert("Icerik panoya kopyalandi.", isPresented: $isCopyAlertPresented) {
                 Button("Tamam", role: .cancel) {}
             }

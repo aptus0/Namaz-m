@@ -2,6 +2,25 @@
 
 Bu dosya projedeki surum degisimlerini takip eder.
 
+## [0.1.4] - 2026-02-25
+
+### Added
+
+- Premium iOS onboarding akisi eklendi: Splash + izin gerekcesi + fallback il secimi.
+- Konum servisi eklendi (`LocationManager`): tek seferlik konum alma, sehir cozumleme, heading takibi.
+- Kible ekranlari eklendi:
+  - `Kible (Pusula)` haptic destekli hizalama
+  - `Kible (Harita)` Apple MapKit tabanli yesil ok yonlendirmesi
+- Ayarlar alti yeni detay ekrani eklendi: `Bildirim Ayarlari`.
+- Premium tasarim stili eklendi: lacivert/altin vurgu, buyuk radius, soft shadow kartlar.
+
+### Changed
+
+- Tab bar adlandirmasi `Hadis` olacak sekilde duzenlendi.
+- Takvim ekrani premium liste formatina gecirildi (grid yerine liste satirlari).
+- Uygulama acilisinda bildirim izni isteme, onboarding izni akisiyla uyumlu hale getirildi.
+- `Info.plist` konum izin aciklamalari eklendi.
+
 ## [0.1.3] - 2026-02-25
 
 ### Added

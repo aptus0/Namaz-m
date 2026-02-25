@@ -15,7 +15,7 @@ struct RootTabView: View {
 
             DailyContentScreenView()
                 .tabItem {
-                    Label("Icerik", systemImage: "book.fill")
+                    Label("Hadis", systemImage: "book.fill")
                 }
 
             SettingsScreenView()

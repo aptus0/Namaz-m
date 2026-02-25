@@ -20,7 +20,7 @@ enum ThemeOption: String, CaseIterable, Identifiable {
 }
 
 enum AccentOption: String, CaseIterable, Identifiable {
-    case premiumBlue = "Premium Mavi"
+    case premiumBlue = "Lacivert"
     case teal = "Yesil Mavi"
     case warmGold = "Altin"
 

@@ -5,6 +5,11 @@ struct CityPickerSheet: View {
     @Environment(\.dismiss) private var dismiss
 
     @State private var searchText = ""
+    let onCitySelected: ((String) -> Void)?
+
+    init(onCitySelected: ((String) -> Void)? = nil) {
+        self.onCitySelected = onCitySelected
+    }
 
     private var filteredCities: [String] {
         if searchText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
@@ -18,6 +23,7 @@ struct CityPickerSheet: View {
             List(filteredCities, id: \.self) { city in
                 Button {
                     appState.selectedCity = city
+                    onCitySelected?(city)
                     dismiss()
                 } label: {
                     HStack {

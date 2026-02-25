@@ -27,9 +27,10 @@ Not: Servis erisim/limit kurallari operasyonel olarak proje disinda takip edilir
 ## iOS Mimari Hedef (V2)
 
 - SwiftUI tabanli moduler yapi
-- `Core` (model + util), `Features` (ekranlar), `Services` (bildirim)
+- `Core` (model + util), `Features` (ekranlar), `Services` (bildirim + konum)
 - App state + local notification scheduler
 - Alarm/hatirlatma akislarinin merkezi yonetimi
+- Onboarding izin akisi (konum -> bildirim) + fallback il secimi
 
 ## iOS Dosya Yapisi
 
@@ -37,6 +38,15 @@ Not: Servis erisim/limit kurallari operasyonel olarak proje disinda takip edilir
 - `Namazım/Features`
 - `Namazım/Services`
 - `Namazım/Namaz_mApp.swift` (uygulama girisi)
+
+## iOS Ekran Seti
+
+- Tablar: `Vakitler`, `Takvim`, `Hadis`, `Ayarlar`
+- Alt ekranlar:
+  - `Bildirim Ayarlari`
+  - `Kible (Pusula)`
+  - `Kible (Harita)`
+  - `Hakkinda / Kaynaklar`
 
 ## iOS Build
 

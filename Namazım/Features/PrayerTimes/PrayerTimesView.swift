@@ -3,6 +3,7 @@ import Combine
 
 struct PrayerTimesView: View {
     @EnvironmentObject private var appState: AppState
+    @EnvironmentObject private var locationManager: LocationManager
 
     @State private var now = Date()
     @State private var isCityPickerPresented = false
@@ -42,12 +43,15 @@ struct PrayerTimesView: View {
 
                         Button {
                             now = Date()
+                            locationManager.requestSingleLocation()
                         } label: {
                             Image(systemName: "arrow.clockwise")
                                 .font(.headline)
                         }
                         .buttonStyle(.bordered)
                     }
+
+                    locationStatusCard
 
                     NextPrayerCard(
                         prayerName: timeline.next.prayer.title,
@@ -72,12 +76,13 @@ struct PrayerTimesView: View {
                                 .frame(maxWidth: .infinity)
                         }
                         .buttonStyle(.borderedProminent)
+                        .tint(PremiumPalette.navy)
 
                         Label("Canli", systemImage: "dot.radiowaves.left.and.right")
                             .frame(maxWidth: .infinity)
-                            .padding(.vertical, 8)
+                            .padding(.vertical, 10)
                             .background(
-                                RoundedRectangle(cornerRadius: 10, style: .continuous)
+                                RoundedRectangle(cornerRadius: 12, style: .continuous)
                                     .fill(Color(.secondarySystemBackground))
                             )
                     }
@@ -89,8 +94,15 @@ struct PrayerTimesView: View {
                 .padding()
             }
             .navigationTitle("Vakitler")
+            .premiumScreenBackground()
         }
         .onReceive(timer) { now = $0 }
+        .onAppear {
+            locationManager.requestSingleLocation()
+        }
+        .onChange(of: locationManager.resolvedCity) { _, city in
+            appState.applyDetectedCity(city)
+        }
         .sheet(isPresented: $isCityPickerPresented) {
             CityPickerSheet()
                 .environmentObject(appState)
@@ -98,5 +110,33 @@ struct PrayerTimesView: View {
         .sheet(isPresented: $isWeeklyViewPresented) {
             WeeklyPrayerSheet(referenceDate: now)
         }
+    }
+
+    private var locationStatusCard: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("Konum Durumu")
+                .font(.headline)
+
+            if locationManager.isLocating {
+                HStack(spacing: 10) {
+                    ProgressView()
+                    Text("Konum aliniyor...")
+                        .font(.subheadline)
+                }
+            } else {
+                Text(locationManager.statusDescription)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            }
+
+            if locationManager.isDenied {
+                Button("Konum Ayarlarini Ac") {
+                    locationManager.openAppSettings()
+                }
+                .buttonStyle(.bordered)
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .premiumCardStyle()
     }
 }

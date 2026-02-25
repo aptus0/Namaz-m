@@ -9,16 +9,16 @@ struct NextPrayerCard: View {
         VStack(spacing: 14) {
             Text("Bir Sonraki Vakit")
                 .font(.headline)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(.white.opacity(0.9))
 
             ZStack {
                 Circle()
-                    .stroke(Color.secondary.opacity(0.14), lineWidth: 14)
+                    .stroke(Color.white.opacity(0.24), lineWidth: 14)
 
                 Circle()
                     .trim(from: 0, to: progress)
                     .stroke(
-                        Color.accentColor,
+                        PremiumPalette.gold,
                         style: StrokeStyle(lineWidth: 14, lineCap: .round)
                     )
                     .rotationEffect(.degrees(-90))
@@ -26,19 +26,19 @@ struct NextPrayerCard: View {
                 VStack(spacing: 6) {
                     Text("\(prayerName)'a")
                         .font(.headline)
+                        .foregroundStyle(.white)
                     Text(countdownText)
                         .font(.system(size: 28, weight: .bold, design: .rounded))
                         .monospacedDigit()
+                        .foregroundStyle(.white)
                 }
             }
             .frame(width: 220, height: 220)
         }
         .frame(maxWidth: .infinity)
         .padding()
-        .background(
-            RoundedRectangle(cornerRadius: 20, style: .continuous)
-                .fill(Color(.secondarySystemBackground))
-        )
+        .background(PremiumPalette.heroGradient, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+        .shadow(color: .black.opacity(0.18), radius: 12, x: 0, y: 5)
     }
 }
 
@@ -70,12 +70,9 @@ struct PrayerTimeRowCard: View {
                 .monospacedDigit()
         }
         .padding()
-        .background(
-            RoundedRectangle(cornerRadius: 14, style: .continuous)
-                .fill(Color(.secondarySystemBackground))
-        )
+        .premiumCardStyle()
         .overlay {
-            RoundedRectangle(cornerRadius: 14, style: .continuous)
+            RoundedRectangle(cornerRadius: 18, style: .continuous)
                 .stroke(isActive ? Color.accentColor : Color.clear, lineWidth: 1.5)
         }
     }

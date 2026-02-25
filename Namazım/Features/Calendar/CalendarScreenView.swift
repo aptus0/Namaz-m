@@ -27,11 +27,7 @@ struct CalendarScreenView: View {
                             .datePickerStyle(.compact)
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding()
-                    .background(
-                        RoundedRectangle(cornerRadius: 16, style: .continuous)
-                            .fill(Color(.secondarySystemBackground))
-                    )
+                    .premiumCardStyle()
 
                     Picker("Takvim", selection: $selectedTab) {
                         ForEach(CalendarTab.allCases) { tab in
@@ -49,6 +45,7 @@ struct CalendarScreenView: View {
                 .padding()
             }
             .navigationTitle("Takvim")
+            .premiumScreenBackground()
         }
         .onReceive(timer) { now = $0 }
     }
@@ -64,52 +61,37 @@ private struct MonthlyPrayerList: View {
     var body: some View {
         LazyVStack(spacing: 10) {
             ForEach(days, id: \.self) { day in
-                PrayerDayGridCard(day: day, entries: PrayerScheduleProvider.entries(for: day))
+                PrayerDayListRow(day: day, entries: PrayerScheduleProvider.entries(for: day))
             }
         }
     }
 }
 
-private struct PrayerDayGridCard: View {
+private struct PrayerDayListRow: View {
     let day: Date
     let entries: [PrayerEntry]
 
-    private let columns = [
-        GridItem(.flexible()),
-        GridItem(.flexible()),
-        GridItem(.flexible())
-    ]
-
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text(day, format: .dateTime.weekday(.abbreviated).day().month(.abbreviated))
+            Text(day, format: .dateTime.weekday(.wide).day().month(.abbreviated))
                 .font(.headline)
 
-            LazyVGrid(columns: columns, spacing: 8) {
+            VStack(spacing: 6) {
                 ForEach(entries) { entry in
-                    VStack(spacing: 4) {
-                        Text(entry.prayer.title)
-                            .font(.caption2)
+                    HStack {
+                        Label(entry.prayer.title, systemImage: entry.prayer.symbolName)
                             .foregroundStyle(.secondary)
+                        Spacer()
                         Text(entry.date, format: .dateTime.hour().minute())
-                            .font(.callout.weight(.semibold))
+                            .fontWeight(.semibold)
                             .monospacedDigit()
                     }
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 6)
-                    .background(
-                        RoundedRectangle(cornerRadius: 10, style: .continuous)
-                            .fill(Color(.tertiarySystemBackground))
-                    )
+                    .font(.subheadline)
                 }
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding()
-        .background(
-            RoundedRectangle(cornerRadius: 14, style: .continuous)
-                .fill(Color(.secondarySystemBackground))
-        )
+        .premiumCardStyle()
     }
 }
 
@@ -143,11 +125,7 @@ private struct RamadanPrayerList: View {
                     .monospacedDigit()
             }
             .frame(maxWidth: .infinity, alignment: .leading)
-            .padding()
-            .background(
-                RoundedRectangle(cornerRadius: 16, style: .continuous)
-                    .fill(Color(.secondarySystemBackground))
-            )
+            .premiumCardStyle()
 
             LazyVStack(spacing: 8) {
                 ForEach(Array(dates.enumerated()), id: \.offset) { index, day in
@@ -166,11 +144,7 @@ private struct RamadanPrayerList: View {
                             .font(.subheadline.weight(.semibold))
                             .monospacedDigit()
                     }
-                    .padding()
-                    .background(
-                        RoundedRectangle(cornerRadius: 12, style: .continuous)
-                            .fill(Color(.secondarySystemBackground))
-                    )
+                    .premiumCardStyle()
                 }
             }
         }
