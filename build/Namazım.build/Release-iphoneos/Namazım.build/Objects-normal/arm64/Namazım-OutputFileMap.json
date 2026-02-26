@@ -1,0 +1,271 @@
+{
+  "" : {
+    "const-values" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/Namazım-primary.swiftconstvalues",
+    "dependencies" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/Namazım-primary.d",
+    "diagnostics" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/Namazım-primary.dia",
+    "emit-module-dependencies" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/Namazım-primary-emit-module.d",
+    "emit-module-diagnostics" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/Namazım-primary-emit-module.dia",
+    "pch" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/Namazım-primary-Bridging-header.pch",
+    "swift-dependencies" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/Namazım-primary.swiftdeps"
+  },
+  "/Users/samet/Desktop/Namazım/Namazım/ContentView.swift" : {
+    "index-unit-output-path" : "/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/ContentView.o",
+    "llvm-bc" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/ContentView.bc",
+    "object" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/ContentView.o"
+  },
+  "/Users/samet/Desktop/Namazım/Namazım/Core/Data/TurkishCities.swift" : {
+    "index-unit-output-path" : "/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/TurkishCities.o",
+    "llvm-bc" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/TurkishCities.bc",
+    "object" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/TurkishCities.o"
+  },
+  "/Users/samet/Desktop/Namazım/Namazım/Core/Data/WorldCityCatalog.swift" : {
+    "index-unit-output-path" : "/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/WorldCityCatalog.o",
+    "llvm-bc" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/WorldCityCatalog.bc",
+    "object" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/WorldCityCatalog.o"
+  },
+  "/Users/samet/Desktop/Namazım/Namazım/Core/Localization/AppLanguage.swift" : {
+    "index-unit-output-path" : "/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/AppLanguage.o",
+    "llvm-bc" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/AppLanguage.bc",
+    "object" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/AppLanguage.o"
+  },
+  "/Users/samet/Desktop/Namazım/Namazım/Core/Localization/TurkishFallbackMap.swift" : {
+    "index-unit-output-path" : "/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/TurkishFallbackMap.o",
+    "llvm-bc" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/TurkishFallbackMap.bc",
+    "object" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/TurkishFallbackMap.o"
+  },
+  "/Users/samet/Desktop/Namazım/Namazım/Core/Models/AppSettingsModels.swift" : {
+    "index-unit-output-path" : "/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/AppSettingsModels.o",
+    "llvm-bc" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/AppSettingsModels.bc",
+    "object" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/AppSettingsModels.o"
+  },
+  "/Users/samet/Desktop/Namazım/Namazım/Core/Models/AppState.swift" : {
+    "index-unit-output-path" : "/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/AppState.o",
+    "llvm-bc" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/AppState.bc",
+    "object" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/AppState.o"
+  },
+  "/Users/samet/Desktop/Namazım/Namazım/Core/Models/DailyContentModels.swift" : {
+    "index-unit-output-path" : "/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/DailyContentModels.o",
+    "llvm-bc" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/DailyContentModels.bc",
+    "object" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/DailyContentModels.o"
+  },
+  "/Users/samet/Desktop/Namazım/Namazım/Core/Models/PrayerModels.swift" : {
+    "index-unit-output-path" : "/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/PrayerModels.o",
+    "llvm-bc" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/PrayerModels.bc",
+    "object" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/PrayerModels.o"
+  },
+  "/Users/samet/Desktop/Namazım/Namazım/Core/Models/QuranModels.swift" : {
+    "index-unit-output-path" : "/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/QuranModels.o",
+    "llvm-bc" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/QuranModels.bc",
+    "object" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/QuranModels.o"
+  },
+  "/Users/samet/Desktop/Namazım/Namazım/Core/Models/WorldCityModels.swift" : {
+    "index-unit-output-path" : "/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/WorldCityModels.o",
+    "llvm-bc" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/WorldCityModels.bc",
+    "object" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/WorldCityModels.o"
+  },
+  "/Users/samet/Desktop/Namazım/Namazım/Core/Utils/DateHelpers.swift" : {
+    "index-unit-output-path" : "/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/DateHelpers.o",
+    "llvm-bc" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/DateHelpers.bc",
+    "object" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/DateHelpers.o"
+  },
+  "/Users/samet/Desktop/Namazım/Namazım/Core/Utils/HijriCalendarService.swift" : {
+    "index-unit-output-path" : "/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/HijriCalendarService.o",
+    "llvm-bc" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/HijriCalendarService.bc",
+    "object" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/HijriCalendarService.o"
+  },
+  "/Users/samet/Desktop/Namazım/Namazım/Core/Utils/QiblaCalculator.swift" : {
+    "index-unit-output-path" : "/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/QiblaCalculator.o",
+    "llvm-bc" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/QiblaCalculator.bc",
+    "object" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/QiblaCalculator.o"
+  },
+  "/Users/samet/Desktop/Namazım/Namazım/Features/About/AboutView.swift" : {
+    "index-unit-output-path" : "/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/AboutView.o",
+    "llvm-bc" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/AboutView.bc",
+    "object" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/AboutView.o"
+  },
+  "/Users/samet/Desktop/Namazım/Namazım/Features/Ads/BannerAdView.swift" : {
+    "index-unit-output-path" : "/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/BannerAdView.o",
+    "llvm-bc" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/BannerAdView.bc",
+    "object" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/BannerAdView.o"
+  },
+  "/Users/samet/Desktop/Namazım/Namazım/Features/Alarm/AlarmRingView.swift" : {
+    "index-unit-output-path" : "/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/AlarmRingView.o",
+    "llvm-bc" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/AlarmRingView.bc",
+    "object" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/AlarmRingView.o"
+  },
+  "/Users/samet/Desktop/Namazım/Namazım/Features/Calendar/CalendarScreenView.swift" : {
+    "index-unit-output-path" : "/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/CalendarScreenView.o",
+    "llvm-bc" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/CalendarScreenView.bc",
+    "object" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/CalendarScreenView.o"
+  },
+  "/Users/samet/Desktop/Namazım/Namazım/Features/DailyContent/DailyContentScreenView.swift" : {
+    "index-unit-output-path" : "/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/DailyContentScreenView.o",
+    "llvm-bc" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/DailyContentScreenView.bc",
+    "object" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/DailyContentScreenView.o"
+  },
+  "/Users/samet/Desktop/Namazım/Namazım/Features/DailyContent/HadithReaderView.swift" : {
+    "index-unit-output-path" : "/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/HadithReaderView.o",
+    "llvm-bc" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/HadithReaderView.bc",
+    "object" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/HadithReaderView.o"
+  },
+  "/Users/samet/Desktop/Namazım/Namazım/Features/Notifications/NotificationSettingsView.swift" : {
+    "index-unit-output-path" : "/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/NotificationSettingsView.o",
+    "llvm-bc" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/NotificationSettingsView.bc",
+    "object" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/NotificationSettingsView.o"
+  },
+  "/Users/samet/Desktop/Namazım/Namazım/Features/Onboarding/OnboardingFlowView.swift" : {
+    "index-unit-output-path" : "/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/OnboardingFlowView.o",
+    "llvm-bc" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/OnboardingFlowView.bc",
+    "object" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/OnboardingFlowView.o"
+  },
+  "/Users/samet/Desktop/Namazım/Namazım/Features/Onboarding/SplashView.swift" : {
+    "index-unit-output-path" : "/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/SplashView.o",
+    "llvm-bc" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/SplashView.bc",
+    "object" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/SplashView.o"
+  },
+  "/Users/samet/Desktop/Namazım/Namazım/Features/PrayerTimes/PrayerTimesView.swift" : {
+    "index-unit-output-path" : "/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/PrayerTimesView.o",
+    "llvm-bc" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/PrayerTimesView.bc",
+    "object" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/PrayerTimesView.o"
+  },
+  "/Users/samet/Desktop/Namazım/Namazım/Features/PrayerTimes/WeeklyPrayerSheet.swift" : {
+    "index-unit-output-path" : "/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/WeeklyPrayerSheet.o",
+    "llvm-bc" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/WeeklyPrayerSheet.bc",
+    "object" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/WeeklyPrayerSheet.o"
+  },
+  "/Users/samet/Desktop/Namazım/Namazım/Features/Qibla/QiblaCompassView.swift" : {
+    "index-unit-output-path" : "/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/QiblaCompassView.o",
+    "llvm-bc" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/QiblaCompassView.bc",
+    "object" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/QiblaCompassView.o"
+  },
+  "/Users/samet/Desktop/Namazım/Namazım/Features/Qibla/QiblaMapView.swift" : {
+    "index-unit-output-path" : "/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/QiblaMapView.o",
+    "llvm-bc" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/QiblaMapView.bc",
+    "object" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/QiblaMapView.o"
+  },
+  "/Users/samet/Desktop/Namazım/Namazım/Features/Quran/QuranReaderView.swift" : {
+    "index-unit-output-path" : "/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/QuranReaderView.o",
+    "llvm-bc" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/QuranReaderView.bc",
+    "object" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/QuranReaderView.o"
+  },
+  "/Users/samet/Desktop/Namazım/Namazım/Features/Quran/QuranReadingSettingsView.swift" : {
+    "index-unit-output-path" : "/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/QuranReadingSettingsView.o",
+    "llvm-bc" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/QuranReadingSettingsView.bc",
+    "object" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/QuranReadingSettingsView.o"
+  },
+  "/Users/samet/Desktop/Namazım/Namazım/Features/Root/RootTabView.swift" : {
+    "index-unit-output-path" : "/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/RootTabView.o",
+    "llvm-bc" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/RootTabView.bc",
+    "object" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/RootTabView.o"
+  },
+  "/Users/samet/Desktop/Namazım/Namazım/Features/Settings/AppIconSettingsView.swift" : {
+    "index-unit-output-path" : "/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/AppIconSettingsView.o",
+    "llvm-bc" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/AppIconSettingsView.bc",
+    "object" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/AppIconSettingsView.o"
+  },
+  "/Users/samet/Desktop/Namazım/Namazım/Features/Settings/CityPickerSheet.swift" : {
+    "index-unit-output-path" : "/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/CityPickerSheet.o",
+    "llvm-bc" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/CityPickerSheet.bc",
+    "object" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/CityPickerSheet.o"
+  },
+  "/Users/samet/Desktop/Namazım/Namazım/Features/Settings/SettingsScreenView.swift" : {
+    "index-unit-output-path" : "/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/SettingsScreenView.o",
+    "llvm-bc" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/SettingsScreenView.bc",
+    "object" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/SettingsScreenView.o"
+  },
+  "/Users/samet/Desktop/Namazım/Namazım/Features/Shared/Cards.swift" : {
+    "index-unit-output-path" : "/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/Cards.o",
+    "llvm-bc" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/Cards.bc",
+    "object" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/Cards.o"
+  },
+  "/Users/samet/Desktop/Namazım/Namazım/Features/Shared/Styles/PremiumStyle.swift" : {
+    "index-unit-output-path" : "/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/PremiumStyle.o",
+    "llvm-bc" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/PremiumStyle.bc",
+    "object" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/PremiumStyle.o"
+  },
+  "/Users/samet/Desktop/Namazım/Namazım/Features/World/WorldCitiesView.swift" : {
+    "index-unit-output-path" : "/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/WorldCitiesView.o",
+    "llvm-bc" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/WorldCitiesView.bc",
+    "object" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/WorldCitiesView.o"
+  },
+  "/Users/samet/Desktop/Namazım/Namazım/Namaz_mApp.swift" : {
+    "index-unit-output-path" : "/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/Namaz_mApp.o",
+    "llvm-bc" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/Namaz_mApp.bc",
+    "object" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/Namaz_mApp.o"
+  },
+  "/Users/samet/Desktop/Namazım/Namazım/Services/Ads/AdManager.swift" : {
+    "index-unit-output-path" : "/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/AdManager.o",
+    "llvm-bc" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/AdManager.bc",
+    "object" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/AdManager.o"
+  },
+  "/Users/samet/Desktop/Namazım/Namazım/Services/Ads/AdMobConfig.swift" : {
+    "index-unit-output-path" : "/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/AdMobConfig.o",
+    "llvm-bc" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/AdMobConfig.bc",
+    "object" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/AdMobConfig.o"
+  },
+  "/Users/samet/Desktop/Namazım/Namazım/Services/AppIcon/AppIconManager.swift" : {
+    "index-unit-output-path" : "/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/AppIconManager.o",
+    "llvm-bc" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/AppIconManager.bc",
+    "object" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/AppIconManager.o"
+  },
+  "/Users/samet/Desktop/Namazım/Namazım/Services/Hadith/HadithSyncService.swift" : {
+    "index-unit-output-path" : "/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/HadithSyncService.o",
+    "llvm-bc" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/HadithSyncService.bc",
+    "object" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/HadithSyncService.o"
+  },
+  "/Users/samet/Desktop/Namazım/Namazım/Services/LiveActivity/PrayerLiveActivityService.swift" : {
+    "index-unit-output-path" : "/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/PrayerLiveActivityService.o",
+    "llvm-bc" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/PrayerLiveActivityService.bc",
+    "object" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/PrayerLiveActivityService.o"
+  },
+  "/Users/samet/Desktop/Namazım/Namazım/Services/Location/LocationManager.swift" : {
+    "index-unit-output-path" : "/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/LocationManager.o",
+    "llvm-bc" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/LocationManager.bc",
+    "object" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/LocationManager.o"
+  },
+  "/Users/samet/Desktop/Namazım/Namazım/Services/Notifications/NotificationConstants.swift" : {
+    "index-unit-output-path" : "/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/NotificationConstants.o",
+    "llvm-bc" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/NotificationConstants.bc",
+    "object" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/NotificationConstants.o"
+  },
+  "/Users/samet/Desktop/Namazım/Namazım/Services/Notifications/NotificationManager.swift" : {
+    "index-unit-output-path" : "/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/NotificationManager.o",
+    "llvm-bc" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/NotificationManager.bc",
+    "object" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/NotificationManager.o"
+  },
+  "/Users/samet/Desktop/Namazım/Namazım/Services/Notifications/NotificationRequestFactory.swift" : {
+    "index-unit-output-path" : "/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/NotificationRequestFactory.o",
+    "llvm-bc" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/NotificationRequestFactory.bc",
+    "object" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/NotificationRequestFactory.o"
+  },
+  "/Users/samet/Desktop/Namazım/Namazım/Services/Prayer/SolarPrayerTimeService.swift" : {
+    "index-unit-output-path" : "/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/SolarPrayerTimeService.o",
+    "llvm-bc" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/SolarPrayerTimeService.bc",
+    "object" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/SolarPrayerTimeService.o"
+  },
+  "/Users/samet/Desktop/Namazım/Namazım/Services/Qibla/QiblaEngine.swift" : {
+    "index-unit-output-path" : "/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/QiblaEngine.o",
+    "llvm-bc" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/QiblaEngine.bc",
+    "object" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/QiblaEngine.o"
+  },
+  "/Users/samet/Desktop/Namazım/Namazım/Services/Quran/QuranAPIConfig.swift" : {
+    "index-unit-output-path" : "/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/QuranAPIConfig.o",
+    "llvm-bc" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/QuranAPIConfig.bc",
+    "object" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/QuranAPIConfig.o"
+  },
+  "/Users/samet/Desktop/Namazım/Namazım/Services/Quran/QuranSyncService.swift" : {
+    "index-unit-output-path" : "/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/QuranSyncService.o",
+    "llvm-bc" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/QuranSyncService.bc",
+    "object" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/QuranSyncService.o"
+  },
+  "/Users/samet/Desktop/Namazım/Namazım/Services/Widgets/WidgetSyncService.swift" : {
+    "index-unit-output-path" : "/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/WidgetSyncService.o",
+    "llvm-bc" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/WidgetSyncService.bc",
+    "object" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/WidgetSyncService.o"
+  },
+  "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/DerivedSources/GeneratedAssetSymbols.swift" : {
+    "index-unit-output-path" : "/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/GeneratedAssetSymbols.o",
+    "llvm-bc" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/GeneratedAssetSymbols.bc",
+    "object" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/Namazım.build/Objects-normal/arm64/GeneratedAssetSymbols.o"
+  }
+}

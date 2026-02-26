@@ -12,6 +12,7 @@ struct ContentView: View {
             if isShowingSplash {
                 SplashView()
                     .transition(.opacity)
+                
             } else if !appState.hasCompletedOnboarding {
                 OnboardingFlowView()
                     .transition(.opacity)
@@ -22,24 +23,29 @@ struct ContentView: View {
         }
         .animation(.easeInOut(duration: 0.25), value: isShowingSplash)
         .animation(.easeInOut(duration: 0.25), value: appState.hasCompletedOnboarding)
-            .tint(appState.accent.color)
-            .preferredColorScheme(appState.theme.colorScheme)
-            .fullScreenCover(item: $notificationManager.activeAlarm) { alarm in
-                AlarmRingView(
-                    event: alarm,
-                    onSnooze: { notificationManager.snoozeActiveAlarm() },
-                    onDismiss: { notificationManager.dismissAlarm() }
-                )
+        .animation(.easeInOut(duration: 0.32), value: appState.premiumThemePack)
+        .tint(appState.accent.color)
+        .preferredColorScheme(appState.theme.colorScheme)
+        .environment(\.locale, appState.language.locale)
+        .environment(\.layoutDirection, appState.layoutDirection)
+        .id("content-\(appState.language.rawValue)-\(appState.premiumThemePack.rawValue)")
+        .fullScreenCover(item: $notificationManager.activeAlarm) { alarm in
+            AlarmRingView(
+                event: alarm,
+                onSnooze: { notificationManager.snoozeActiveAlarm() },
+                onDismiss: { notificationManager.dismissAlarm() }
+            )
+            .environmentObject(appState)
+        }
+        .task {
+            if isShowingSplash {
+                try? await Task.sleep(for: .milliseconds(550))
+                isShowingSplash = false
             }
-            .task {
-                if isShowingSplash {
-                    try? await Task.sleep(for: .milliseconds(900))
-                    isShowingSplash = false
-                }
-            }
-            .onChange(of: locationManager.resolvedCity) { _, city in
-                appState.applyDetectedCity(city)
-            }
+        }
+        .onChange(of: locationManager.resolvedCity) { _, city in
+            appState.applyDetectedCity(city)
+        }
     }
 }
 

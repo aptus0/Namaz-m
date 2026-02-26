@@ -1,0 +1,12 @@
+{
+  "/Users/samet/Desktop/Namazım/NamazimWidgets/NamazimPrayerWidgets.swift" : {
+    "abi-baseline-json" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/NamazimWidgets.build/Objects-normal/arm64/NamazimWidgets.abi.json",
+    "const-values" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/NamazimWidgets.build/Objects-normal/arm64/NamazimWidgets-primary.swiftconstvalues",
+    "dependencies" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/NamazimWidgets.build/Objects-normal/arm64/NamazimWidgets-primary.d",
+    "diagnostics" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/NamazimWidgets.build/Objects-normal/arm64/NamazimWidgets-primary.dia",
+    "objc-header" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/NamazimWidgets.build/Objects-normal/arm64/NamazimWidgets-Swift.h",
+    "swiftdoc" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/NamazimWidgets.build/Objects-normal/arm64/NamazimWidgets.swiftdoc",
+    "swiftmodule" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/NamazimWidgets.build/Objects-normal/arm64/NamazimWidgets.swiftmodule",
+    "swiftsourceinfo" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/NamazimWidgets.build/Objects-normal/arm64/NamazimWidgets.swiftsourceinfo"
+  }
+}

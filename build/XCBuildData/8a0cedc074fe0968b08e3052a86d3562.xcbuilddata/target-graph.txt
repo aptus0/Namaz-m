@@ -1,0 +1,13 @@
+Target dependency graph (6 targets)
+Target 'Namazım' in project 'Namazım'
+➜ Explicit dependency on target 'NamazimWidgets' in project 'Namazım'
+➜ Explicit dependency on target 'GoogleMobileAds' in project 'GoogleMobileAds'
+Target 'GoogleMobileAds' in project 'GoogleMobileAds'
+➜ Explicit dependency on target 'GoogleMobileAdsTarget' in project 'GoogleMobileAds'
+➜ Explicit dependency on target 'GoogleUserMessagingPlatform' in project 'GoogleUserMessagingPlatform'
+Target 'GoogleMobileAdsTarget' in project 'GoogleMobileAds'
+➜ Explicit dependency on target 'GoogleUserMessagingPlatform' in project 'GoogleUserMessagingPlatform'
+Target 'GoogleUserMessagingPlatform' in project 'GoogleUserMessagingPlatform'
+➜ Explicit dependency on target 'UserMessagingPlatformTarget' in project 'GoogleUserMessagingPlatform'
+Target 'UserMessagingPlatformTarget' in project 'GoogleUserMessagingPlatform' (no dependencies)
+Target 'NamazimWidgets' in project 'Namazım' (no dependencies)

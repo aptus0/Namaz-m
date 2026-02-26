@@ -23,13 +23,13 @@ struct SettingsScreenView: View {
                 VStack(spacing: 16) {
                     VStack(alignment: .leading, spacing: 12) {
                         HStack {
-                            Label("Secili Il", systemImage: "mappin.and.ellipse")
+                            Label(appState.localized("settings_selected_city"), systemImage: "mappin.and.ellipse")
                             Spacer()
                             Text(appState.selectedCity)
                                 .fontWeight(.semibold)
                         }
 
-                        Button("Ili Degistir") {
+                        Button(appState.localized("settings_change_city")) {
                             isCityPickerPresented = true
                         }
                         .buttonStyle(.bordered)
@@ -41,47 +41,71 @@ struct SettingsScreenView: View {
                         NavigationLink {
                             NotificationSettingsView()
                         } label: {
-                            settingRow(title: "Bildirim Ayarlari", symbol: "bell.badge")
+                            settingRow(title: appState.localized("settings_notifications"), symbol: "bell.badge")
+                        }
+
+                        NavigationLink {
+                            AppIconSettingsView()
+                        } label: {
+                            settingRow(title: appState.localized("settings_app_icon"), symbol: "app.badge")
                         }
 
                         NavigationLink {
                             QiblaCompassView()
                         } label: {
-                            settingRow(title: "Kible (Pusula)", symbol: "location.north")
+                            settingRow(title: appState.localized("settings_qibla_compass"), symbol: "location.north")
                         }
 
                         NavigationLink {
                             QiblaMapView()
                         } label: {
-                            settingRow(title: "Kible (Harita)", symbol: "map")
+                            settingRow(title: appState.localized("settings_qibla_map"), symbol: "map")
+                        }
+
+                        NavigationLink {
+                            QuranReadingSettingsView()
+                        } label: {
+                            settingRow(title: appState.localized("settings_quran_reading"), symbol: "book.pages")
                         }
 
                         NavigationLink {
                             AboutView()
                         } label: {
-                            settingRow(title: "Hakkinda / Kaynaklar", symbol: "info.circle")
+                            settingRow(title: appState.localized("settings_about"), symbol: "info.circle")
                         }
                     }
                     .premiumCardStyle()
 
                     VStack(alignment: .leading, spacing: 12) {
-                        Text("Tema ve Veri")
+                        Text(appState.localized("settings_theme_and_data"))
                             .font(.headline)
 
-                        Picker("Tema", selection: $appState.theme) {
+                        Picker(appState.localized("settings_premium_theme_pack"), selection: $appState.premiumThemePack) {
+                            ForEach(PremiumThemePack.allCases) { pack in
+                                Text(pack.rawValue).tag(pack)
+                            }
+                        }
+
+                        Picker(appState.localized("settings_language"), selection: $appState.language) {
+                            ForEach(AppLanguage.allCases) { option in
+                                Text(option.displayTitle).tag(option)
+                            }
+                        }
+
+                        Picker(appState.localized("settings_theme"), selection: $appState.theme) {
                             ForEach(ThemeOption.allCases) { option in
                                 Text(option.rawValue).tag(option)
                             }
                         }
                         .pickerStyle(.segmented)
 
-                        Picker("Aksan", selection: $appState.accent) {
+                        Picker(appState.localized("settings_accent"), selection: $appState.accent) {
                             ForEach(AccentOption.allCases) { option in
                                 Text(option.rawValue).tag(option)
                             }
                         }
 
-                        Picker("Kaynak", selection: $appState.dataSource) {
+                        Picker(appState.localized("settings_data_source"), selection: $appState.dataSource) {
                             ForEach(DataSourceOption.allCases) { option in
                                 Text(option.rawValue).tag(option)
                             }
@@ -91,32 +115,54 @@ struct SettingsScreenView: View {
                     .premiumCardStyle()
 
                     VStack(alignment: .leading, spacing: 12) {
-                        Text("Hadis")
+                        Text(appState.localized("tab_hadith"))
                             .font(.headline)
 
-                        Toggle("Gunluk hadis bildirimi", isOn: $appState.hadithDailyEnabled)
+                        Toggle(appState.localized("settings_daily_hadith_toggle"), isOn: $appState.hadithDailyEnabled)
 
                         if appState.hadithDailyEnabled {
-                            DatePicker("Saat", selection: $appState.hadithDailyTime, displayedComponents: .hourAndMinute)
+                            DatePicker(appState.localized("settings_time"), selection: $appState.hadithDailyTime, displayedComponents: .hourAndMinute)
                         }
 
-                        Toggle("Namaz oncesi hadis", isOn: $appState.hadithNearPrayerEnabled)
+                        Toggle(appState.localized("settings_hadith_before_prayer"), isOn: $appState.hadithNearPrayerEnabled)
 
-                        Picker("Varsayilan Koleksiyon", selection: defaultHadithBookBinding) {
-                            Text("One Cikan Koleksiyon").tag("featured")
-                            ForEach(HadithRepository.books) { book in
+                        HStack {
+                            Text(appState.localized("settings_hadith_source"))
+                            Spacer()
+                            Text(appState.hadithSource.rawValue)
+                                .font(.subheadline.weight(.semibold))
+                                .foregroundStyle(.secondary)
+                        }
+
+                        Picker(appState.localized("settings_default_collection"), selection: defaultHadithBookBinding) {
+                            Text(appState.localized("settings_featured_collection")).tag("featured")
+                            ForEach(appState.hadithBooks) { book in
                                 Text(book.title).tag(book.id)
                             }
                         }
 
-                        Picker("Yazi Boyutu", selection: $appState.hadithTextSize) {
+                        Picker(appState.localized("settings_text_size"), selection: $appState.hadithTextSize) {
                             ForEach(HadithTextSize.allCases) { size in
                                 Text(size.rawValue).tag(size)
                             }
                         }
                         .pickerStyle(.segmented)
 
-                        Toggle("Sade okuma modu", isOn: $appState.hadithReadingModeSimple)
+                        Toggle(appState.localized("settings_simple_reading_mode"), isOn: $appState.hadithReadingModeSimple)
+
+                        HStack(spacing: 10) {
+                            Button(appState.localized("settings_sync_hadith")) {
+                                Task {
+                                    await appState.syncHadithCatalog()
+                                }
+                            }
+                            .buttonStyle(.bordered)
+
+                            Text(hadithSyncStatusTitle)
+                                .font(.footnote)
+                                .foregroundStyle(.secondary)
+                                .multilineTextAlignment(.trailing)
+                        }
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .premiumCardStyle()
@@ -152,11 +198,11 @@ struct SettingsScreenView: View {
                     .premiumCardStyle()
 
                     VStack(alignment: .leading, spacing: 8) {
-                        Text("Izin Durumlari")
+                        Text(appState.localized("settings_permission_status"))
                             .font(.headline)
 
                         HStack {
-                            Text("Konum")
+                            Text(appState.localized("settings_location"))
                             Spacer()
                             Text(locationManager.statusDescription)
                                 .foregroundStyle(.secondary)
@@ -164,7 +210,7 @@ struct SettingsScreenView: View {
                         }
 
                         HStack {
-                            Text("Bildirim")
+                            Text(appState.localized("settings_notifications"))
                             Spacer()
                             Text(notificationManager.statusTitle)
                                 .foregroundStyle(.secondary)
@@ -176,7 +222,7 @@ struct SettingsScreenView: View {
                 }
                 .padding()
             }
-            .navigationTitle("Ayarlar")
+            .navigationTitle(appState.localized("screen_settings"))
             .premiumScreenBackground()
         }
         .sheet(isPresented: $isCityPickerPresented) {
@@ -195,5 +241,19 @@ struct SettingsScreenView: View {
         }
         .foregroundStyle(.primary)
         .padding(.vertical, 8)
+    }
+
+    private var hadithSyncStatusTitle: String {
+        switch appState.hadithSyncState {
+        case .idle:
+            return appState.localized("settings_sync_idle")
+        case .syncing:
+            return appState.localized("settings_syncing")
+        case .synced(let count, let date):
+            let dateString = date.formatted(.dateTime.hour().minute())
+            return appState.localized("settings_synced_count", count, dateString)
+        case .failed(let message):
+            return appState.localized("settings_sync_failed", message)
+        }
     }
 }

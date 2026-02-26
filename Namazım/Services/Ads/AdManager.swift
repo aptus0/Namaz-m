@@ -13,6 +13,21 @@ final class AdManager: NSObject, ObservableObject {
     private var appOpen: AppOpenAd?
 
     private var isConfigured = false
+    private static let isPreview = ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1"
+    private static let isDebugBuild: Bool = {
+        #if DEBUG
+        return true
+        #else
+        return false
+        #endif
+    }()
+    private static let isSimulator: Bool = {
+        #if targetEnvironment(simulator)
+        return true
+        #else
+        return false
+        #endif
+    }()
 
     private enum Keys {
         static let adFreeUntil = "ads.adFreeUntil"
@@ -21,8 +36,13 @@ final class AdManager: NSObject, ObservableObject {
         static let appOpenLastDay = "ads.appOpenLastDay"
     }
 
+    private var adsRuntimeEnabled: Bool {
+        !Self.isPreview && !Self.isDebugBuild && !Self.isSimulator
+    }
+
     func configureIfNeeded() {
         guard !isConfigured else { return }
+        guard adsRuntimeEnabled else { return }
         isConfigured = true
 
         restorePersistedState()
@@ -42,17 +62,18 @@ final class AdManager: NSObject, ObservableObject {
     }
 
     var shouldShowBannerAds: Bool {
-        isSDKReady && !isAdFreeActive
+        adsRuntimeEnabled && isSDKReady && !isAdFreeActive
     }
 
     func loadAllFormats() {
-        guard isSDKReady, !isAdFreeActive else { return }
+        guard adsRuntimeEnabled, isSDKReady, !isAdFreeActive else { return }
         loadInterstitial()
         loadRewarded()
         loadAppOpen()
     }
 
     func showInterstitialIfEligible(for placement: AdPlacement) {
+        guard adsRuntimeEnabled else { return }
         guard shouldShowInterstitial else { return }
         guard let rootVC = Self.topViewController(), let interstitial else {
             loadInterstitial()
@@ -65,6 +86,7 @@ final class AdManager: NSObject, ObservableObject {
     }
 
     func showRewardedUnlock() {
+        guard adsRuntimeEnabled else { return }
         guard isSDKReady else { return }
         guard let rootVC = Self.topViewController(), let rewarded else {
             loadRewarded()
@@ -79,6 +101,7 @@ final class AdManager: NSObject, ObservableObject {
     }
 
     func showAppOpenIfEligible() {
+        guard adsRuntimeEnabled else { return }
         guard shouldShowAppOpen else { return }
         guard let rootVC = Self.topViewController(), let appOpen else {
             loadAppOpen()
@@ -90,20 +113,20 @@ final class AdManager: NSObject, ObservableObject {
     }
 
     private var shouldShowInterstitial: Bool {
-        guard isSDKReady, !isAdFreeActive else { return false }
+        guard adsRuntimeEnabled, isSDKReady, !isAdFreeActive else { return false }
         refreshDailyInterstitialCountersIfNeeded()
         let count = UserDefaults.standard.integer(forKey: Keys.interstitialCount)
         return count < 2
     }
 
     private var shouldShowAppOpen: Bool {
-        guard isSDKReady, !isAdFreeActive else { return false }
+        guard adsRuntimeEnabled, isSDKReady, !isAdFreeActive else { return false }
         let lastDay = UserDefaults.standard.string(forKey: Keys.appOpenLastDay)
         return lastDay != Self.currentDayKey()
     }
 
     private func loadInterstitial() {
-        guard !isAdFreeActive else { return }
+        guard adsRuntimeEnabled, !isAdFreeActive else { return }
 
         let request = Request()
         InterstitialAd.load(with: AdMobConfig.interstitialUnitID, request: request) { [weak self] ad, error in
@@ -121,7 +144,7 @@ final class AdManager: NSObject, ObservableObject {
     }
 
     private func loadRewarded() {
-        guard !isAdFreeActive else { return }
+        guard adsRuntimeEnabled, !isAdFreeActive else { return }
 
         let request = Request()
         RewardedAd.load(with: AdMobConfig.rewardedUnitID, request: request) { [weak self] ad, error in
@@ -139,7 +162,7 @@ final class AdManager: NSObject, ObservableObject {
     }
 
     private func loadAppOpen() {
-        guard !isAdFreeActive else { return }
+        guard adsRuntimeEnabled, !isAdFreeActive else { return }
 
         let request = Request()
         AppOpenAd.load(with: AdMobConfig.appOpenUnitID, request: request) { [weak self] ad, error in
@@ -226,6 +249,8 @@ final class AdManager: NSObject, ObservableObject {
         return root
     }
 }
+
+
 
 extension AdManager: FullScreenContentDelegate {
     nonisolated func adDidDismissFullScreenContent(_ ad: FullScreenPresentingAd) {
