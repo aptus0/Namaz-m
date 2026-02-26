@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct AlarmRingView: View {
+    @EnvironmentObject private var appState: AppState
+
     let event: AlarmEvent
     let onSnooze: () -> Void
     let onDismiss: () -> Void
@@ -24,7 +26,7 @@ struct AlarmRingView: View {
                     .font(.system(size: 56, weight: .bold))
                     .foregroundStyle(Color(red: 0.88, green: 0.68, blue: 0.20))
 
-                Text("\(event.prayer.title) Vakti")
+                Text("\(event.prayer.localizedTitle(language: appState.language)) Vakti")
                     .font(.system(size: 34, weight: .bold, design: .rounded))
                     .foregroundStyle(.white)
 

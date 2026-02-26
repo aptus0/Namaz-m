@@ -1,6 +1,7 @@
 import SwiftUI
 import UIKit
 import AVFoundation
+import Combine
 
 struct DailyContentScreenView: View {
     @EnvironmentObject private var appState: AppState
@@ -15,11 +16,22 @@ struct DailyContentScreenView: View {
         appState.dailyHadithSelection()
     }
 
+    private var todayContentType: DailyContentType {
+        todaySelection.hadith.contentType
+    }
+
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 14) {
-                    Picker("Hadis", selection: $selectedTab) {
+                    HadithShowcaseHero(
+                        selection: todaySelection,
+                        syncState: appState.hadithSyncState,
+                        source: appState.hadithSource,
+                        contentType: todayContentType
+                    )
+
+                    Picker("Icerik", selection: $selectedTab) {
                         ForEach(HadithModuleTab.allCases) { tab in
                             Text(tab.rawValue).tag(tab)
                         }
@@ -33,6 +45,7 @@ struct DailyContentScreenView: View {
                             isFavorite: appState.isHadithFavorite(todaySelection.hadith),
                             textSize: appState.hadithTextSize,
                             isSimpleMode: appState.hadithReadingModeSimple,
+                            contentType: todayContentType,
                             onCopy: {
                                 UIPasteboard.general.string = todaySelection.hadith.shareText
                                 isCopyAlertPresented = true
@@ -64,9 +77,9 @@ struct DailyContentScreenView: View {
                 }
                 .padding()
             }
-            .navigationTitle("Hadis")
+            .navigationTitle("Icerik")
             .premiumScreenBackground()
-            .alert("Hadis panoya kopyalandi.", isPresented: $isCopyAlertPresented) {
+            .alert("Icerik panoya kopyalandi.", isPresented: $isCopyAlertPresented) {
                 Button("Tamam", role: .cancel) {}
             }
             .navigationDestination(item: $activeReaderTarget) { target in
@@ -84,7 +97,7 @@ struct DailyContentScreenView: View {
                 notificationManager.pendingHadithDeepLink = nil
             }
             .onChange(of: notificationManager.pendingHadithSave) { _, deepLink in
-                guard let deepLink, let hadith = HadithRepository.hadith(id: deepLink.hadithID) else { return }
+                guard let deepLink, let hadith = appState.hadithItem(id: deepLink.hadithID) else { return }
                 appState.markHadithFavorite(hadith)
                 notificationManager.pendingHadithSave = nil
             }
@@ -96,17 +109,117 @@ struct DailyContentScreenView: View {
     }
 }
 
+private struct HadithShowcaseHero: View {
+    let selection: HadithDailySelection
+    let syncState: HadithSyncState
+    let source: HadithSourceOption
+    let contentType: DailyContentType
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(alignment: .top) {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Icerik Kutuphanesi")
+                        .font(.title3.weight(.bold))
+                        .foregroundStyle(.white)
+                    Text(selection.book.title)
+                        .font(.subheadline.weight(.medium))
+                        .foregroundStyle(.white.opacity(0.88))
+                        .lineLimit(1)
+                }
+
+                Spacer()
+
+                Text("Canli API")
+                    .font(.caption2.weight(.semibold))
+                    .padding(.horizontal, 9)
+                    .padding(.vertical, 5)
+                    .background(Capsule().fill(.white.opacity(0.16)))
+                    .foregroundStyle(.white)
+            }
+
+            HStack(spacing: 8) {
+                Image(systemName: contentType.symbolName)
+                Text(contentType.title)
+            }
+            .font(.caption.weight(.semibold))
+            .padding(.horizontal, 10)
+            .padding(.vertical, 6)
+            .background(Capsule().fill(.white.opacity(0.18)))
+            .foregroundStyle(.white.opacity(0.94))
+
+            Text(selection.hadith.shortText)
+                .font(.callout.weight(.medium))
+                .foregroundStyle(.white.opacity(0.94))
+                .lineLimit(3)
+
+            Label(syncTitle, systemImage: syncIcon)
+                .font(.caption)
+                .foregroundStyle(.white.opacity(0.86))
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(18)
+        .background(
+            RoundedRectangle(cornerRadius: 22, style: .continuous)
+                .fill(
+                    LinearGradient(
+                        colors: [
+                            PremiumPalette.navy.opacity(0.94),
+                            PremiumPalette.navy.opacity(0.72),
+                            PremiumPalette.gold.opacity(0.82)
+                        ],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                )
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: 22, style: .continuous)
+                .stroke(.white.opacity(0.20), lineWidth: 1)
+        )
+        .shadow(color: PremiumPalette.navy.opacity(0.25), radius: 14, x: 0, y: 7)
+    }
+
+    private var syncTitle: String {
+        switch syncState {
+        case .idle:
+            return "Henuz esitleme yapilmadi"
+        case .syncing:
+            return "Icerikler esitleniyor"
+        case .synced(let count, let date):
+            return "\(count) icerik • \(date.formatted(.dateTime.hour().minute()))"
+        case .failed:
+            return "API erisimi yoksa onbellek ile devam ediliyor"
+        }
+    }
+
+    private var syncIcon: String {
+        switch syncState {
+        case .idle:
+            return "cloud"
+        case .syncing:
+            return "arrow.triangle.2.circlepath"
+        case .synced:
+            return "checkmark.seal.fill"
+        case .failed:
+            return "externaldrive.badge.exclamationmark"
+        }
+    }
+}
+
 private struct DailyHadithTabCard: View {
+    @Environment(\.colorScheme) private var colorScheme
+
     let selection: HadithDailySelection
     let isFavorite: Bool
     let textSize: HadithTextSize
     let isSimpleMode: Bool
+    let contentType: DailyContentType
     let onCopy: () -> Void
     let onToggleFavorite: () -> Void
     let onOpenReader: () -> Void
 
-    @State private var isSpeaking = false
-    private let speechSynthesizer = AVSpeechSynthesizer()
+    @StateObject private var speechController = HadithSpeechController()
 
     private var displayFont: Font {
         let base = textSize.pointSize + (isSimpleMode ? 3 : 0)
@@ -117,7 +230,7 @@ private struct DailyHadithTabCard: View {
         VStack(alignment: .leading, spacing: 14) {
             HStack(alignment: .firstTextBaseline) {
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("Gunun Hadisi")
+                    Text("Gunun Icerigi")
                         .font(.title3.weight(.semibold))
                     Text(selection.date.formatted(.dateTime.day().month().year()))
                         .font(.subheadline)
@@ -125,7 +238,7 @@ private struct DailyHadithTabCard: View {
                 }
 
                 Spacer()
-                ContentTypeBadge(text: "Hadis")
+                ContentTypeBadge(text: contentType.title)
             }
 
             VStack(alignment: .leading, spacing: 14) {
@@ -153,47 +266,32 @@ private struct DailyHadithTabCard: View {
             )
 
             HStack(spacing: 10) {
-                ShareLink(item: selection.hadith.shareText) {
-                    Label("Paylas", systemImage: "square.and.arrow.up")
-                        .frame(maxWidth: .infinity)
-                }
-                .buttonStyle(.bordered)
-
-                Button(action: onCopy) {
-                    Label("Kopyala", systemImage: "doc.on.doc")
-                        .frame(maxWidth: .infinity)
-                }
-                .buttonStyle(.bordered)
-            }
-
-            HStack(spacing: 10) {
-                Button(action: onToggleFavorite) {
-                    Label(isFavorite ? "Favoriden Cikar" : "Favori", systemImage: isFavorite ? "heart.fill" : "heart")
+                Button(action: onOpenReader) {
+                    Label("Okuyucuda Ac", systemImage: "book.fill")
                         .frame(maxWidth: .infinity)
                 }
                 .buttonStyle(.borderedProminent)
-                .tint(isFavorite ? .pink : PremiumPalette.navy)
+                .tint(PremiumPalette.navy)
 
-                Button {
-                    toggleSpeech()
-                } label: {
-                    Label(isSpeaking ? "Dur" : "Dinle", systemImage: isSpeaking ? "stop.circle" : "speaker.wave.2")
-                        .frame(maxWidth: .infinity)
-                }
-                .buttonStyle(.bordered)
+                actionMenu
             }
-
-            Button(action: onOpenReader) {
-                Label("Okuyucuda Ac", systemImage: "book")
-                    .frame(maxWidth: .infinity)
-            }
-            .buttonStyle(.bordered)
         }
         .premiumCardStyle()
+        .onDisappear {
+            speechController.stop()
+        }
     }
 
     private var cardSurface: Color {
-        isSimpleMode ? Color(white: 0.16) : Color.accentColor.opacity(0.07)
+        if isSimpleMode {
+            return colorScheme == .dark
+                ? Color(red: 0.14, green: 0.15, blue: 0.18)
+                : Color(red: 0.98, green: 0.97, blue: 0.94)
+        }
+
+        return colorScheme == .dark
+            ? Color.white.opacity(0.08)
+            : Color.accentColor.opacity(0.07)
     }
 
     private var geometricPattern: some View {
@@ -212,24 +310,74 @@ private struct DailyHadithTabCard: View {
     }
 
     private func toggleSpeech() {
+        speechController.toggleSpeech(text: selection.hadith.text, languageCode: "tr-TR")
+    }
+
+    private var actionMenu: some View {
+        Menu {
+            ShareLink(item: selection.hadith.shareText) {
+                Label("Paylas", systemImage: "square.and.arrow.up")
+            }
+
+            Button(action: onCopy) {
+                Label("Kopyala", systemImage: "doc.on.doc")
+            }
+
+            Button(action: onToggleFavorite) {
+                Label(isFavorite ? "Favoriden Cikar" : "Favori", systemImage: isFavorite ? "heart.fill" : "heart")
+            }
+
+            Button(action: toggleSpeech) {
+                Label(speechController.isSpeaking ? "Okumayi Durdur" : "Sesli Dinle", systemImage: speechController.isSpeaking ? "stop.circle" : "speaker.wave.2")
+            }
+        } label: {
+            Label("Islemler", systemImage: "ellipsis.circle")
+                .frame(maxWidth: .infinity)
+        }
+        .buttonStyle(.bordered)
+    }
+}
+
+@MainActor
+private final class HadithSpeechController: NSObject, ObservableObject {
+    @Published private(set) var isSpeaking = false
+
+    private let synthesizer = AVSpeechSynthesizer()
+
+    override init() {
+        super.init()
+        synthesizer.delegate = self
+    }
+
+    func toggleSpeech(text: String, languageCode: String) {
         if isSpeaking {
-            speechSynthesizer.stopSpeaking(at: .immediate)
-            isSpeaking = false
+            stop()
             return
         }
 
-        let utterance = AVSpeechUtterance(string: selection.hadith.text)
-        utterance.voice = AVSpeechSynthesisVoice(language: "tr-TR")
+        let utterance = AVSpeechUtterance(string: text)
+        utterance.voice = AVSpeechSynthesisVoice(language: languageCode)
         utterance.rate = 0.45
-        speechSynthesizer.speak(utterance)
+        synthesizer.speak(utterance)
         isSpeaking = true
+    }
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 8) {
-            if speechSynthesizer.isSpeaking {
-                isSpeaking = true
-            } else {
-                isSpeaking = false
-            }
+    func stop() {
+        synthesizer.stopSpeaking(at: .immediate)
+        isSpeaking = false
+    }
+}
+
+extension HadithSpeechController: AVSpeechSynthesizerDelegate {
+    nonisolated func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
+        Task { @MainActor in
+            self.isSpeaking = false
+        }
+    }
+
+    nonisolated func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didCancel utterance: AVSpeechUtterance) {
+        Task { @MainActor in
+            self.isSpeaking = false
         }
     }
 }
@@ -239,63 +387,78 @@ private struct HadithBooksTabView: View {
     let onOpenReader: (String, String?) -> Void
 
     var body: some View {
-        LazyVStack(spacing: 12) {
-            ForEach(HadithRepository.books) { book in
-                let progress = appState.readingProgress(for: book.id)
+        let books = appState.hadithBooks
 
-                VStack(alignment: .leading, spacing: 12) {
-                    HStack(alignment: .top) {
-                        Image(systemName: book.coverSymbol)
-                            .font(.title2)
-                            .foregroundStyle(PremiumPalette.gold)
-                            .frame(width: 32)
+        if books.isEmpty {
+            VStack(spacing: 8) {
+                Image(systemName: "book.closed")
+                    .font(.title2)
+                    .foregroundStyle(.secondary)
+                Text("Kitap verisi bulunamadi.")
+                    .foregroundStyle(.secondary)
+            }
+            .frame(maxWidth: .infinity)
+            .padding(32)
+            .premiumCardStyle()
+        } else {
+            LazyVStack(spacing: 12) {
+                ForEach(books) { book in
+                    let progress = appState.readingProgress(for: book.id)
 
-                        VStack(alignment: .leading, spacing: 5) {
-                            Text(book.title)
-                                .font(.headline)
+                    VStack(alignment: .leading, spacing: 12) {
+                        HStack(alignment: .top) {
+                            Image(systemName: book.contentType.symbolName)
+                                .font(.title2)
+                                .foregroundStyle(PremiumPalette.gold)
+                                .frame(width: 32)
 
-                            Text(book.summary)
-                                .font(.subheadline)
+                            VStack(alignment: .leading, spacing: 5) {
+                                Text(book.title)
+                                    .font(.headline)
+
+                                Text(book.summary)
+                                    .font(.subheadline)
+                                    .foregroundStyle(.secondary)
+                            }
+
+                            Spacer()
+
+                            if appState.hadithDefaultBookID == book.id {
+                                Text("Varsayilan")
+                                    .font(.caption2.weight(.semibold))
+                                    .padding(.horizontal, 8)
+                                    .padding(.vertical, 5)
+                                    .background(Capsule().fill(PremiumPalette.gold.opacity(0.22)))
+                            }
+                        }
+
+                        if let progress {
+                            Text("Devam: \(progress.contentType.title) \(progress.number)")
+                                .font(.footnote)
                                 .foregroundStyle(.secondary)
                         }
 
-                        Spacer()
+                        HStack(spacing: 10) {
+                            Button {
+                                appState.hadithDefaultBookID = book.id
+                            } label: {
+                                Label("Kaynak Yap", systemImage: "checkmark.circle")
+                                    .frame(maxWidth: .infinity)
+                            }
+                            .buttonStyle(.bordered)
 
-                        if appState.hadithDefaultBookID == book.id {
-                            Text("Varsayilan")
-                                .font(.caption2.weight(.semibold))
-                                .padding(.horizontal, 8)
-                                .padding(.vertical, 5)
-                                .background(Capsule().fill(PremiumPalette.gold.opacity(0.22)))
+                            Button {
+                                onOpenReader(book.id, progress?.id)
+                            } label: {
+                                Label(progress == nil ? "Kitabi Ac" : "Devam Et", systemImage: "arrow.right.circle")
+                                    .frame(maxWidth: .infinity)
+                            }
+                            .buttonStyle(.borderedProminent)
+                            .tint(PremiumPalette.navy)
                         }
                     }
-
-                    if let progress {
-                        Text("Devam: Hadis \(progress.number)")
-                            .font(.footnote)
-                            .foregroundStyle(.secondary)
-                    }
-
-                    HStack(spacing: 10) {
-                        Button {
-                            appState.hadithDefaultBookID = book.id
-                        } label: {
-                            Label("Kaynak Yap", systemImage: "checkmark.circle")
-                                .frame(maxWidth: .infinity)
-                        }
-                        .buttonStyle(.bordered)
-
-                        Button {
-                            onOpenReader(book.id, progress?.id)
-                        } label: {
-                            Label(progress == nil ? "Kitabi Ac" : "Devam Et", systemImage: "arrow.right.circle")
-                                .frame(maxWidth: .infinity)
-                        }
-                        .buttonStyle(.borderedProminent)
-                        .tint(PremiumPalette.navy)
-                    }
+                    .premiumCardStyle()
                 }
-                .premiumCardStyle()
             }
         }
     }
@@ -316,7 +479,7 @@ private struct HadithFavoritesTabView: View {
                     .font(.title2)
                     .foregroundStyle(.secondary)
 
-                Text("Henuz favori hadis yok.")
+                Text("Henuz favori icerik yok.")
                     .foregroundStyle(.secondary)
             }
             .frame(maxWidth: .infinity)
@@ -327,12 +490,10 @@ private struct HadithFavoritesTabView: View {
                 ForEach(favorites) { hadith in
                     VStack(alignment: .leading, spacing: 10) {
                         HStack {
-                            Text(HadithRepository.book(id: hadith.bookID)?.title ?? "Koleksiyon")
+                            Text(appState.hadithBook(id: hadith.bookID)?.title ?? "Koleksiyon")
                                 .font(.headline)
                             Spacer()
-                            Text("#\(hadith.number)")
-                                .font(.subheadline.weight(.semibold))
-                                .foregroundStyle(.secondary)
+                            ContentTypeBadge(text: hadith.contentType.title)
                         }
 
                         Text(hadith.text)

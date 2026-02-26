@@ -1,26 +1,33 @@
 import SwiftUI
 
 struct RootTabView: View {
+    @EnvironmentObject private var appState: AppState
+
     var body: some View {
         TabView {
             PrayerTimesView()
                 .tabItem {
-                    Label("Vakitler", systemImage: "clock.fill")
+                    Label(appState.localized("tab_prayers"), systemImage: "clock.fill")
                 }
 
             CalendarScreenView()
                 .tabItem {
-                    Label("Takvim", systemImage: "calendar")
+                    Label(appState.localized("tab_calendar"), systemImage: "calendar")
                 }
 
             DailyContentScreenView()
                 .tabItem {
-                    Label("Hadis", systemImage: "book.fill")
+                    Label(appState.localized("tab_hadith"), systemImage: "book.fill")
+                }
+
+            WorldCitiesView()
+                .tabItem {
+                    Label(appState.localized("tab_world"), systemImage: "globe.europe.africa.fill")
                 }
 
             SettingsScreenView()
                 .tabItem {
-                    Label("Ayarlar", systemImage: "gearshape.fill")
+                    Label(appState.localized("tab_settings"), systemImage: "gearshape.fill")
                 }
         }
     }

@@ -9,13 +9,13 @@ enum OnboardingStep: Int, CaseIterable {
     var title: String {
         switch self {
         case .welcome:
-            return "Hos Geldiniz"
+            return "Hoş Geldiniz"
         case .location:
-            return "Konum Ayari"
+            return "Konum Ayarı"
         case .notifications:
-            return "Bildirim Ayari"
+            return "Bildirim Ayarı"
         case .finish:
-            return "Hazir"
+            return "Hazır"
         }
     }
 }

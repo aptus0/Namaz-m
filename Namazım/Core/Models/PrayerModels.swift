@@ -13,18 +13,22 @@ enum PrayerName: String, CaseIterable, Identifiable, Codable {
     var title: String {
         switch self {
         case .imsak:
-            return "Imsak"
+            return "İmsak"
         case .gunes:
-            return "Gunes"
+            return "Güneş"
         case .ogle:
-            return "Ogle"
+            return "Öğle"
         case .ikindi:
-            return "Ikindi"
+            return "İkindi"
         case .aksam:
-            return "Aksam"
+            return "Akşam"
         case .yatsi:
-            return "Yatsi"
+            return "Yatsı"
         }
+    }
+
+    func localizedTitle(language: AppLanguage) -> String {
+        Localizer.text("prayer_name_\(rawValue)", language: language)
     }
 
     var symbolName: String {

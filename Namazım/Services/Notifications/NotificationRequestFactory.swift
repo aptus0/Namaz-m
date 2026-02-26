@@ -2,14 +2,17 @@ import Foundation
 import UserNotifications
 
 enum NotificationRequestFactory {
+    private static let prayerPlanningDays = 2
+    private static let hadithPlanningDays = 2
+
     @MainActor
     static func makeRequests(using state: AppState, now: Date = Date()) -> [UNNotificationRequest] {
         var requests: [UNNotificationRequest] = []
 
         if state.prayerNotificationsEnabled {
-            let days = nextNDays(from: now, count: 7)
+            let days = nextNDays(from: now, count: prayerPlanningDays)
             for day in days {
-                let entries = PrayerScheduleProvider.entries(for: day)
+                let entries = entries(for: day, state: state)
 
                 for setting in state.prayerSettings where setting.isEnabled {
                     guard let entry = entries.first(where: { $0.prayer == setting.prayer }) else {
@@ -19,7 +22,7 @@ enum NotificationRequestFactory {
                     if setting.leadTime.rawValue > 0 {
                         let preDate = entry.date.addingTimeInterval(TimeInterval(-setting.leadTime.rawValue * 60))
                         if preDate > now {
-                            let reminderContent = prayerReminderContent(setting: setting, fireDate: preDate)
+                            let reminderContent = prayerReminderContent(setting: setting, fireDate: preDate, state: state)
                             requests.append(makeRequest(
                                 id: "prayer-reminder-\(setting.prayer.rawValue)-\(Int(preDate.timeIntervalSince1970))",
                                 date: preDate,
@@ -27,7 +30,7 @@ enum NotificationRequestFactory {
                             ))
 
                             if state.hadithNearPrayerEnabled {
-                                let hadithDate = preDate.addingTimeInterval(6)
+                                let hadithDate = preDate.addingTimeInterval(30)
                                 if hadithDate > now {
                                     let hadithContent = hadithNearPrayerContent(
                                         prayer: setting.prayer,
@@ -45,7 +48,7 @@ enum NotificationRequestFactory {
                     }
 
                     if entry.date > now {
-                        let atPrayerContent = prayerEntryContent(setting: setting, fireDate: entry.date)
+                        let atPrayerContent = prayerEntryContent(setting: setting, fireDate: entry.date, state: state)
                         requests.append(makeRequest(
                             id: "prayer-entry-\(setting.prayer.rawValue)-\(Int(entry.date.timeIntervalSince1970))",
                             date: entry.date,
@@ -57,7 +60,7 @@ enum NotificationRequestFactory {
         }
 
         if state.hadithDailyEnabled {
-            requests.append(contentsOf: dailyHadithRequests(time: state.hadithDailyTime, state: state, now: now, days: 14))
+            requests.append(contentsOf: dailyHadithRequests(time: state.hadithDailyTime, state: state, now: now, days: hadithPlanningDays))
         }
 
         return requests
@@ -86,13 +89,15 @@ enum NotificationRequestFactory {
             }
 
             let selection = state.dailyHadithSelection(for: fireDate)
-            let body = HadithRepository.shortSnippet(for: selection.hadith, maxLength: 110)
+            let body = state.hadithSnippet(for: selection.hadith, maxLength: 110)
 
             let content = UNMutableNotificationContent()
-            content.title = "Gunun Hadisi"
+            content.title = state.localized("app_name")
+            content.subtitle = state.localized("notification_daily_hadith_title")
             content.body = body
-            content.sound = .default
+            content.sound = notificationSound(for: state.generalNotificationTone)
             content.categoryIdentifier = NotificationCategoryID.hadithDaily
+            content.threadIdentifier = "hadith-daily"
             content.userInfo = [
                 NotificationUserInfoKey.payloadKind: NotificationPayloadKind.hadithDaily.rawValue,
                 NotificationUserInfoKey.hadithID: selection.hadith.id,
@@ -101,6 +106,7 @@ enum NotificationRequestFactory {
 
             if #available(iOS 15.0, *) {
                 content.interruptionLevel = .active
+                content.relevanceScore = 0.7
             }
 
             return makeRequest(
@@ -111,13 +117,20 @@ enum NotificationRequestFactory {
         }
     }
 
-    private static func prayerReminderContent(setting: PrayerReminderSetting, fireDate: Date) -> UNMutableNotificationContent {
+    @MainActor
+    private static func prayerReminderContent(
+        setting: PrayerReminderSetting,
+        fireDate: Date,
+        state: AppState
+    ) -> UNMutableNotificationContent {
+        let prayerTitle = setting.prayer.localizedTitle(language: state.language)
         let content = UNMutableNotificationContent()
-        content.title = "\(setting.prayer.title)'a \(setting.leadTime.rawValue) dk kaldi"
-        content.body = "Hazirlik icin son adimlar."
-        content.sound = .default
+        content.title = state.localized("app_name")
+        content.subtitle = state.localized("notification_prayer_reminder_title", prayerTitle, setting.leadTime.rawValue)
+        content.body = state.localized("notification_prayer_reminder_body")
+        content.sound = notificationSound(for: state.generalNotificationTone)
         content.categoryIdentifier = NotificationCategoryID.prayerAlert
-        content.threadIdentifier = setting.prayer.rawValue
+        content.threadIdentifier = "prayer-\(setting.prayer.rawValue)"
         content.userInfo = [
             NotificationUserInfoKey.payloadKind: NotificationPayloadKind.prayerReminder.rawValue,
             NotificationUserInfoKey.prayerName: setting.prayer.rawValue,
@@ -126,6 +139,7 @@ enum NotificationRequestFactory {
 
         if #available(iOS 15.0, *) {
             content.interruptionLevel = .timeSensitive
+            content.relevanceScore = 0.9
         }
 
         return content
@@ -139,11 +153,13 @@ enum NotificationRequestFactory {
     ) -> UNMutableNotificationContent {
         let shiftedDate = Calendar.current.date(byAdding: .minute, value: prayer.orderIndex * 11, to: fireDate) ?? fireDate
         let selection = state.dailyHadithSelection(for: shiftedDate)
+        let prayerTitle = prayer.localizedTitle(language: state.language)
 
         let content = UNMutableNotificationContent()
-        content.title = "\(prayer.title) yaklasiyor"
-        content.body = HadithRepository.shortSnippet(for: selection.hadith, maxLength: 100)
-        content.sound = .default
+        content.title = state.localized("app_name")
+        content.subtitle = state.localized("notification_hadith_near_prayer_title", prayerTitle)
+        content.body = state.hadithSnippet(for: selection.hadith, maxLength: 100)
+        content.sound = notificationSound(for: state.generalNotificationTone)
         content.categoryIdentifier = NotificationCategoryID.hadithNearPrayer
         content.threadIdentifier = "hadith-near-prayer"
         content.userInfo = [
@@ -155,26 +171,35 @@ enum NotificationRequestFactory {
 
         if #available(iOS 15.0, *) {
             content.interruptionLevel = .active
+            content.relevanceScore = 0.72
         }
 
         return content
     }
 
-    private static func prayerEntryContent(setting: PrayerReminderSetting, fireDate: Date) -> UNMutableNotificationContent {
+    @MainActor
+    private static func prayerEntryContent(
+        setting: PrayerReminderSetting,
+        fireDate: Date,
+        state: AppState
+    ) -> UNMutableNotificationContent {
+        let prayerTitle = setting.prayer.localizedTitle(language: state.language)
         let content = UNMutableNotificationContent()
-        content.title = "\(setting.prayer.title) vakti girdi"
+        content.title = state.localized("app_name")
+        content.subtitle = state.localized("notification_prayer_entry_title", prayerTitle)
 
         switch setting.mode {
         case .notification:
-            content.body = "Namaz vaktiniz basladi."
+            content.body = state.localized("notification_prayer_entry_body")
             content.categoryIdentifier = NotificationCategoryID.prayerAlert
         case .alarm:
-            content.body = "Alarm modu acik. Ertele veya kapat secenegi hazir."
+            content.body = state.localized("notification_prayer_alarm_body")
             content.categoryIdentifier = NotificationCategoryID.prayerAlarm
         }
 
-        content.sound = notificationSound(for: setting.tone)
-        content.threadIdentifier = setting.prayer.rawValue
+        let selectedTone = setting.tone == .default ? state.generalNotificationTone : setting.tone
+        content.sound = notificationSound(for: selectedTone)
+        content.threadIdentifier = "prayer-\(setting.prayer.rawValue)"
         content.userInfo = [
             NotificationUserInfoKey.payloadKind: (setting.mode == .alarm ? NotificationPayloadKind.prayerAlarm : NotificationPayloadKind.prayerReminder).rawValue,
             NotificationUserInfoKey.prayerName: setting.prayer.rawValue,
@@ -183,6 +208,7 @@ enum NotificationRequestFactory {
 
         if #available(iOS 15.0, *) {
             content.interruptionLevel = .timeSensitive
+            content.relevanceScore = 1
         }
 
         return content
@@ -193,8 +219,7 @@ enum NotificationRequestFactory {
             return .default
         }
 
-        let parts = fileName.split(separator: ".", maxSplits: 1).map(String.init)
-        if parts.count == 2, Bundle.main.url(forResource: parts[0], withExtension: parts[1]) != nil {
+        if NotificationToneFileResolver.url(for: fileName) != nil {
             return UNNotificationSound(named: UNNotificationSoundName(rawValue: fileName))
         }
 
@@ -202,8 +227,32 @@ enum NotificationRequestFactory {
     }
 
     private static func makeRequest(id: String, date: Date, content: UNMutableNotificationContent) -> UNNotificationRequest {
-        let components = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: date)
-        let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
+        let interval = date.timeIntervalSinceNow
+        let trigger: UNNotificationTrigger
+
+        if interval > 0, interval < 60 {
+            trigger = UNTimeIntervalNotificationTrigger(timeInterval: max(1, interval), repeats: false)
+        } else {
+            let components = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: date)
+            trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
+        }
+
         return UNNotificationRequest(identifier: id, content: content, trigger: trigger)
+    }
+
+    @MainActor
+    private static func entries(for day: Date, state: AppState) -> [PrayerEntry] {
+        let selected = normalize(state.selectedCity)
+        if let city = WorldCityCatalog.all.first(where: { normalize($0.name) == selected }) {
+            return SolarPrayerTimeService.entries(for: city, day: day)
+        }
+
+        return PrayerScheduleProvider.entries(for: day)
+    }
+
+    private static func normalize(_ value: String) -> String {
+        value
+            .folding(options: [.diacriticInsensitive, .caseInsensitive], locale: Locale(identifier: "tr_TR"))
+            .replacingOccurrences(of: " ", with: "")
     }
 }

@@ -49,15 +49,20 @@ final class NotificationManager: NSObject, ObservableObject {
                 print("Notification scheduling error: \(error)")
             }
         }
+
+        WidgetSyncService.sync(using: state)
+        await PrayerLiveActivityService.sync(using: state)
     }
 
-    func sendTestNotification(using state: AppState) {
+    func sendTestNotification(using state: AppState, tone: AlarmTone? = nil) {
         let prayer = state.prayerSettings.first(where: { $0.isEnabled })?.prayer ?? .aksam
+        let prayerTitle = prayer.localizedTitle(language: state.language)
+        let selectedTone = tone ?? state.generalNotificationTone
 
         let content = UNMutableNotificationContent()
-        content.title = "Test Bildirimi"
-        content.body = "\(prayer.title) icin test bildirimi basariyla hazir."
-        content.sound = .default
+        content.title = state.localized("notification_test_title")
+        content.body = state.localized("notification_test_body", prayerTitle)
+        content.sound = notificationSound(for: selectedTone)
         content.categoryIdentifier = NotificationCategoryID.prayerAlert
 
         if #available(iOS 15.0, *) {
@@ -74,6 +79,17 @@ final class NotificationManager: NSObject, ObservableObject {
                 print("Test notification error: \(error)")
             }
         }
+    }
+
+    func notificationSound(for tone: AlarmTone) -> UNNotificationSound {
+        guard let fileName = tone.fileName else {
+            return .default
+        }
+
+        if NotificationToneFileResolver.url(for: fileName) != nil {
+            return UNNotificationSound(named: UNNotificationSoundName(rawValue: fileName))
+        }
+        return .default
     }
 
     func dismissAlarm() {
@@ -103,15 +119,15 @@ final class NotificationManager: NSObject, ObservableObject {
     var statusTitle: String {
         switch authorizationStatus {
         case .notDetermined:
-            return "Izin bekleniyor"
+            return "İzin bekleniyor"
         case .denied:
-            return "Bildirim izni kapali"
+            return "Bildirim izni kapalı"
         case .authorized:
-            return "Bildirim izni acik"
+            return "Bildirim izni açık"
         case .provisional:
-            return "Gecici izin acik"
+            return "Geçici izin açık"
         case .ephemeral:
-            return "Ephemeral izin acik"
+            return "Ephemeral izin açık"
         @unknown default:
             return "Durum bilinmiyor"
         }
@@ -134,6 +150,12 @@ final class NotificationManager: NSObject, ObservableObject {
             options: [.destructive]
         )
 
+        let openAppAction = UNNotificationAction(
+            identifier: NotificationActionID.openApp,
+            title: "Uygulamayi Ac",
+            options: [.foreground]
+        )
+
         let hadithOpenAction = UNNotificationAction(
             identifier: NotificationActionID.hadithOpen,
             title: "Oku",
@@ -148,7 +170,7 @@ final class NotificationManager: NSObject, ObservableObject {
 
         let prayerAlert = UNNotificationCategory(
             identifier: NotificationCategoryID.prayerAlert,
-            actions: [],
+            actions: [openAppAction, snoozeAction],
             intentIdentifiers: [],
             options: []
         )
@@ -179,10 +201,11 @@ final class NotificationManager: NSObject, ObservableObject {
 
     private func scheduleSnooze(for event: AlarmEvent) {
         let fireDate = Date().addingTimeInterval(5 * 60)
+        let prayerTitle = Localizer.text("prayer_name_\(event.prayer.rawValue)", language: .system)
 
         let content = UNMutableNotificationContent()
-        content.title = "\(event.prayer.title) icin erteleme bitti"
-        content.body = "Namaz vaktiniz bekliyor."
+        content.title = Localizer.text("notification_snooze_title", language: .system, prayerTitle)
+        content.body = Localizer.text("notification_snooze_body", language: .system)
         content.sound = .default
         content.categoryIdentifier = NotificationCategoryID.prayerAlarm
         content.userInfo = [
@@ -219,7 +242,7 @@ extension NotificationManager: UNUserNotificationCenterDelegate {
         willPresent notification: UNNotification,
         withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void
     ) {
-        if notification.request.content.categoryIdentifier == "CHANNEL_PRAYER_ALARM" {
+        if notification.request.content.categoryIdentifier == NotificationCategoryID.prayerAlarm {
             let payload = Self.extractPayload(from: notification.request.content.userInfo)
             Task { @MainActor in
                 if let payload {
@@ -264,6 +287,15 @@ extension NotificationManager: UNUserNotificationCenterDelegate {
             case NotificationActionID.dismiss:
                 self.activeAlarm = nil
 
+            case NotificationActionID.openApp:
+                if categoryID == NotificationCategoryID.prayerAlarm, let payload {
+                    self.activeAlarm = AlarmEvent(
+                        id: response.notification.request.identifier,
+                        prayer: payload.prayer,
+                        fireDate: payload.fireDate
+                    )
+                }
+
             case NotificationActionID.hadithSave:
                 if let hadithLink = Self.extractHadithPayload(from: response.notification.request.content.userInfo) {
                     self.pendingHadithSave = hadithLink
@@ -275,7 +307,7 @@ extension NotificationManager: UNUserNotificationCenterDelegate {
                 }
 
             default:
-                if categoryID == "CHANNEL_PRAYER_ALARM", let payload {
+                if categoryID == NotificationCategoryID.prayerAlarm, let payload {
                     self.activeAlarm = AlarmEvent(
                         id: response.notification.request.identifier,
                         prayer: payload.prayer,
@@ -301,21 +333,21 @@ private extension NotificationManager {
 
     nonisolated static func extractPayload(from userInfo: [AnyHashable: Any]) -> AlarmPayload? {
         guard
-            let prayerRaw = userInfo["prayerName"] as? String,
+            let prayerRaw = userInfo[NotificationUserInfoKey.prayerName] as? String,
             let prayer = PrayerName(rawValue: prayerRaw)
         else {
             return nil
         }
 
-        let timestamp = userInfo["fireDate"] as? TimeInterval
+        let timestamp = userInfo[NotificationUserInfoKey.fireDate] as? TimeInterval
         let fireDate = timestamp.map(Date.init(timeIntervalSince1970:)) ?? Date()
         return AlarmPayload(prayer: prayer, fireDate: fireDate)
     }
 
     nonisolated static func extractHadithPayload(from userInfo: [AnyHashable: Any]) -> HadithDeepLink? {
         guard
-            let bookID = userInfo["hadithBookID"] as? String,
-            let hadithID = userInfo["hadithID"] as? String
+            let bookID = userInfo[NotificationUserInfoKey.hadithBookID] as? String,
+            let hadithID = userInfo[NotificationUserInfoKey.hadithID] as? String
         else {
             return nil
         }

@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct WeeklyPrayerSheet: View {
+    @EnvironmentObject private var appState: AppState
     let referenceDate: Date
     @Environment(\.dismiss) private var dismiss
 
@@ -15,7 +16,7 @@ struct WeeklyPrayerSheet: View {
                     Section(day.formatted(.dateTime.weekday(.wide).day().month(.abbreviated))) {
                         ForEach(PrayerScheduleProvider.entries(for: day)) { entry in
                             HStack {
-                                Text(entry.prayer.title)
+                                Text(entry.prayer.localizedTitle(language: appState.language))
                                 Spacer()
                                 Text(entry.date, format: .dateTime.hour().minute())
                                     .monospacedDigit()
@@ -24,7 +25,7 @@ struct WeeklyPrayerSheet: View {
                     }
                 }
             }
-            .navigationTitle("Haftalik Vakitler")
+            .navigationTitle("Haftalık Vakitler")
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Kapat") {

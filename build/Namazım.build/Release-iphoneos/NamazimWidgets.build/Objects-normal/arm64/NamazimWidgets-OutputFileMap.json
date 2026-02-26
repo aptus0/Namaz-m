@@ -1,0 +1,26 @@
+{
+  "" : {
+    "const-values" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/NamazimWidgets.build/Objects-normal/arm64/NamazimWidgets-primary.swiftconstvalues",
+    "dependencies" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/NamazimWidgets.build/Objects-normal/arm64/NamazimWidgets-primary.d",
+    "diagnostics" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/NamazimWidgets.build/Objects-normal/arm64/NamazimWidgets-primary.dia",
+    "emit-module-dependencies" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/NamazimWidgets.build/Objects-normal/arm64/NamazimWidgets-primary-emit-module.d",
+    "emit-module-diagnostics" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/NamazimWidgets.build/Objects-normal/arm64/NamazimWidgets-primary-emit-module.dia",
+    "pch" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/NamazimWidgets.build/Objects-normal/arm64/NamazimWidgets-primary-Bridging-header.pch",
+    "swift-dependencies" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/NamazimWidgets.build/Objects-normal/arm64/NamazimWidgets-primary.swiftdeps"
+  },
+  "/Users/samet/Desktop/Namazım/NamazimWidgets/NamazimPrayerWidgets.swift" : {
+    "index-unit-output-path" : "/Namazım.build/Release-iphoneos/NamazimWidgets.build/Objects-normal/arm64/NamazimPrayerWidgets.o",
+    "llvm-bc" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/NamazimWidgets.build/Objects-normal/arm64/NamazimPrayerWidgets.bc",
+    "object" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/NamazimWidgets.build/Objects-normal/arm64/NamazimPrayerWidgets.o"
+  },
+  "/Users/samet/Desktop/Namazım/NamazimWidgets/NamazimWidgetsBundle.swift" : {
+    "index-unit-output-path" : "/Namazım.build/Release-iphoneos/NamazimWidgets.build/Objects-normal/arm64/NamazimWidgetsBundle.o",
+    "llvm-bc" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/NamazimWidgets.build/Objects-normal/arm64/NamazimWidgetsBundle.bc",
+    "object" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/NamazimWidgets.build/Objects-normal/arm64/NamazimWidgetsBundle.o"
+  },
+  "/Users/samet/Desktop/Namazım/NamazimWidgets/WidgetModels.swift" : {
+    "index-unit-output-path" : "/Namazım.build/Release-iphoneos/NamazimWidgets.build/Objects-normal/arm64/WidgetModels.o",
+    "llvm-bc" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/NamazimWidgets.build/Objects-normal/arm64/WidgetModels.bc",
+    "object" : "/Users/samet/Desktop/Namazım/build/Namazım.build/Release-iphoneos/NamazimWidgets.build/Objects-normal/arm64/WidgetModels.o"
+  }
+}
